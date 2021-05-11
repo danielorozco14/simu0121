@@ -50,6 +50,7 @@ def leerMallayCondiciones(Mesh: classes.Mesh):
                         l = float(file_line[0])
                         k = float(file_line[1])
                         Q = float(file_line[2])
+                        
                     if(cont == 1):
                         nNodes = int(file_line[0])
                         nElemts = int(file_line[1])
@@ -74,6 +75,3 @@ def leerMallayCondiciones(Mesh: classes.Mesh):
 
         except (FileNotFoundError):
             print("El archivo no ha sido encontrado")
-
-Mesh = classes.Mesh()
-leerMallayCondiciones(Mesh)

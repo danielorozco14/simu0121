@@ -66,6 +66,7 @@ class Condition(item):
 
 class Mesh:
     parameters = []
+    sizes = []
     node_list = Node()
     element_list = Element()
     dirichlet_list = Condition()
@@ -78,12 +79,12 @@ class Mesh:
         self.parameters.insert(Parameters.HEAT_SOURCE.value - 1, Q)
     
     def setSizes(self, nNodes, nElemts, nDirich, nNeumn):
-        ## AQUI ESTA EL ERROR,
-        # HAY QUE BUSCAR COMO CAMBIAR EL VALOR DE UN ENUM LUEGO DE SER DECLARADO
-        Sizes.NODES.value = nNodes
-        Sizes.ELEMENTS.value = nElemts
-        Sizes.DIRICHLET.value = nDirich
-        Sizes.NEUMANN.value = nNeumn
+      
+        self.sizes.insert(0, nNodes)
+        self.sizes.insert(1, nElemts)
+        self.sizes.insert(2, nDirich)
+        self.sizes.insert(3, nNeumn)
+     
 
     def getSize(self, s):
         return self.sizes[s]
@@ -93,11 +94,11 @@ class Mesh:
 
     ##SI REVIENTA ES POR ESTE METODO
     def createData(self):
-        print(Sizes.NODES.value)
-        self.node_list =  [Node()] * Sizes.NODES.value
-        self.element_list = [Element()] * Sizes.ELEMENTS.value
-        self.dirichlet_list = [Condition()] * Sizes.DIRICHLET.value
-        self.neumann_list = [Condition()] * Sizes.NEUMANN.value
+        
+        self.node_list =  [Node()] * self.sizes[0]
+        self.element_list = [Element()] * self.sizes[1]
+        self.dirichlet_list = [Condition()] * self.sizes[2]
+        self.neumann_list = [Condition()] * self.sizes[3]
         
 
     def getNodes(self):
