@@ -1,27 +1,37 @@
 import classes
 
-def obtenerDatos(file_name, mode, nLines, item_list):
-       
-    with open(f"{file_name}") as file:
-        for line in file:
-            row = line.split()
-            try:
-                while(nLines > 0):
-                    for item in range(0, len(row)):
-                        if(len(row) > 1):
-                            if(mode == classes.Lines.INT_FLOAT):
-                                e = int(row[0])
-                                r = float(row[1])
-                                item_list[item].sentIntFloat(e,r)
+def obtenerDatos(file, nlines, n, mode, item_list):
+    #Para saltarse filas
+    file.readline()
+    #De ser necesario de saltarse mas de un fila
+    if(nlines == classes.Lines.DOUBLELINE):
+        file.readline()
 
-                            if(mode == classes.Lines.INT_INT_INT):
-                                e1 = int(row[0])
-                                e2 = int(row[1])
-                                e3 = int(row[2])
-                                item_list[item].sentIntIntInt(e1, e2, e3)
-                    nLines -= 1
-            except (IndexError):
-                print("Index Error occurred")
+    index = 0
+    for f in file:
+        try:
+            if(mode == classes.Modes.INT_FLOAT and n > 0):
+                row = f.split()
+                if(len(row) > 1):
+                    e = int(row[0])
+                    r = float(row[1])
+                    n -= 1
+                    item_list[index].setIntFloat(e, r)
+                    index += 1
+
+            if(mode == classes.Modes.INT_INT_INT and n > 0):
+                row = f.split()
+                if(len(row) > 1):
+                    print(row)
+                    e1 = int(row[0])
+                    e2 = int(row[1])
+                    e3 = int(row[2])
+                    n -= 1
+                    item_list[index].setIntIntInt(e1, e2, e3)
+                    index += 1
+        except(IndexError):
+            print("Index error ocurred at obtenerDatos()\n")
+
 
 
 
