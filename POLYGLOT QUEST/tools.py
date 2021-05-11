@@ -9,52 +9,41 @@ def obtenerDatos(file, nlines, n, mode, item_list):
 
     index = 0
     for f in file:
-        try:
+        
             if(mode == classes.Modes.INT_FLOAT and n > 0):
                 row = f.split()
                 if(len(row) > 1):
                     e = int(row[0])
                     r = float(row[1])
                     n -= 1
-                    item_list[index].setIntFloat(e, r)
+                    item_list[index].sentIntFloat(e, r)
                     index += 1
 
             if(mode == classes.Modes.INT_INT_INT and n > 0):
                 row = f.split()
                 if(len(row) > 1):
-                    print(row)
                     e1 = int(row[0])
                     e2 = int(row[1])
                     e3 = int(row[2])
                     n -= 1
-                    item_list[index].setIntIntInt(e1, e2, e3)
+                    item_list[index].sentIntIntInt(e1, e2, e3)
                     index += 1
-        except(IndexError):
-            print("Index error ocurred at obtenerDatos()\n")
+      
 
 
 
 
-def leerMallayCondiciones(Mesh):
+def leerMallayCondiciones(Mesh: classes.Mesh):
     filename = ""
     flag = True
-
-    l = 0.0
-    k = 0.0
-    Q = 0.0
-
-    nNodes = 0
-    nElemts = 0 
-    nDirich = 0
-    nNeumn = 0
-    
+   
     while(flag):
         try:
             filename = input("Ingrese el nombre del archivo que contiene los datos de la malla:\n")
-            f = open(filename)
-            if(f):
+            file = open(filename)
+            if(file):
                 cont = 0
-                for line in f:
+                for line in file:
                     file_line = line.split()                  
 
                     if(cont == 0):
@@ -66,6 +55,7 @@ def leerMallayCondiciones(Mesh):
                         nElemts = int(file_line[1])
                         nDirich = int(file_line[2])
                         nNeumn = int(file_line[3])
+                        
                     if cont > 1:
                         break       
                     cont += 1             
@@ -74,14 +64,14 @@ def leerMallayCondiciones(Mesh):
                 Mesh.setSizes(nNodes, nElemts, nDirich, nNeumn)
                 Mesh.createData()
 
-                obtenerDatos(filename,classes.Lines.SINGLELINE,Mesh.getNodes() )
-                obtenerDatos(filename, classes.Lines.DOUBLELINE, )
+                obtenerDatos(file, classes.Lines.SINGLELINE, nNodes, classes.Modes.INT_FLOAT, Mesh.getNodes())
+                obtenerDatos(file, classes.Lines.DOUBLELINE, nElemts, classes.Modes.INT_INT_INT, Mesh.getElements())
+                obtenerDatos(file, classes.Lines.DOUBLELINE, nDirich, classes.Modes.INT_FLOAT, Mesh.getDirichlet())
+                obtenerDatos(file, classes.Lines.DOUBLELINE, nNeumn, classes.Modes.INT_FLOAT, Mesh.getNeumann())
 
-
-
-
-                f.close()
+                file.close()
                 flag = False
+
         except (FileNotFoundError):
             print("El archivo no ha sido encontrado")
 

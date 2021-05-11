@@ -66,22 +66,24 @@ class Condition(item):
 
 class Mesh:
     parameters = []
-    sizes = []
     node_list = Node()
     element_list = Element()
     dirichlet_list = Condition()
     neumann_list = Condition()
 
     def setParameters(self, l, k, Q):
-        self.parameters[Parameters.ELEMENT_LENGTH] = l
-        self.parameters[Parameters.THERMAL_CONDUCTIVITY] = k
-        self.parameters[Parameters.HEAT_SOURCE] = Q
+        
+        self.parameters.insert(Parameters.ELEMENT_LENGTH.value -1,l)
+        self.parameters.insert(Parameters.THERMAL_CONDUCTIVITY.value - 1, k)
+        self.parameters.insert(Parameters.HEAT_SOURCE.value - 1, Q)
     
     def setSizes(self, nNodes, nElemts, nDirich, nNeumn):
-        self.sizes[Sizes.NODES] = nNodes
-        self.sizes[Sizes.ELEMENTS] = nElemts
-        self.sizes[Sizes.DIRICHLET] = nDirich
-        self.sizes[Sizes.NEUMANN] = nNeumn
+        ## AQUI ESTA EL ERROR,
+        # HAY QUE BUSCAR COMO CAMBIAR EL VALOR DE UN ENUM LUEGO DE SER DECLARADO
+        Sizes.NODES.value = nNodes
+        Sizes.ELEMENTS.value = nElemts
+        Sizes.DIRICHLET.value = nDirich
+        Sizes.NEUMANN.value = nNeumn
 
     def getSize(self, s):
         return self.sizes[s]
@@ -91,10 +93,12 @@ class Mesh:
 
     ##SI REVIENTA ES POR ESTE METODO
     def createData(self):
-        self.node_list =  [self.sizes[Sizes.NODES]]
-        self.element_list = [self.sizes[Sizes.ELEMENTS]]
-        self.dirichlet_list = [self.sizes[Sizes.DIRICHLET]]
-        self.neumann_list = [self.sizes[Sizes.NEUMANN]]
+        print(Sizes.NODES.value)
+        self.node_list =  [Node()] * Sizes.NODES.value
+        self.element_list = [Element()] * Sizes.ELEMENTS.value
+        self.dirichlet_list = [Condition()] * Sizes.DIRICHLET.value
+        self.neumann_list = [Condition()] * Sizes.NEUMANN.value
+        
 
     def getNodes(self):
         return self.node_list
@@ -115,6 +119,7 @@ class Mesh:
         return self.element_list[i]
     
     def getCondition(self, i, type):
+        #Talvez pete aqui, agregar el .value al Sizes.DIRICHLET
         if(type == Sizes.DIRICHLET):
             return self.dirichlet_list[i]
         else:
