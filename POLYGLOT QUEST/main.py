@@ -27,9 +27,11 @@ def main():
     sel.showKs(localKs)
     sel.showbs(localBs)
     '''
-    math_tools.zeroes(matrix_K, Mesh.getSize(classes.Sizes.NODES.value - 1))
-    math_tools.zeroes(vector_b, Mesh.getSize(classes.Sizes.NODES.value - 1))
 
+    
+    math_tools.Zeroes(matrix_K, Mesh.getSize(classes.Sizes.NODES.value - 1))
+    math_tools.zeroes(vector_b, Mesh.getSize(classes.Sizes.NODES.value - 1))
+    
     sel.ensamblaje(Mesh, localKs, localBs, matrix_K, vector_b)
     sel.applyNeumann(Mesh, vector_b)
     sel.applyDirichlet(Mesh, matrix_K, vector_b)

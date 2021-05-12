@@ -16,10 +16,10 @@ def showKs(KsMatrix):
         print("************************************\n")
 
 def showVector(Vector):
-    print("[",end=" ")
+    print("\n[",end=" ")
     for i in range(0, len(Vector)):
         print(str(Vector[i]), end = " ")
-    print("]",end=" ")
+    print("]")
 
 def showbs(bs):
     for i in range(0, len(bs)):
@@ -37,7 +37,7 @@ def createLocalK(element, mesh):
 
     k = mesh.getParameter(classes.Parameters.THERMAL_CONDUCTIVITY.value - 1)
     l = mesh.getParameter(classes.Parameters.ELEMENT_LENGTH.value - 1)
-
+    
     row1.append(k/l)
     row1.append(-k/l)
 
@@ -46,6 +46,7 @@ def createLocalK(element, mesh):
 
     K.append(row1)
     K.append(row2)
+    
 
     return K
 
@@ -69,24 +70,20 @@ def createLocalb(element, mesh):
 # SINO PASADO COMO ARGUMENTO
 def crearSistemasLocales(mesh, localKs, localBs):
     
-    for i in range(0, mesh.getSize(classes.Sizes.ELEMENTS.value - 1)):
+    for i in range(0, mesh.getSize(1)):
         localKs.append(createLocalK(i, mesh))
         localBs.append(createLocalb(i, mesh))
+    
 
 def assemblyK(element, localK, matrixK):
-
-    #print("Element getNode1()= " + str(element.getNode1()))
-    #print("Element getNode2()= " + str(element.getNode2()))
-    
-    
     index1 = element.getNode1() - 1
     index2 = element.getNode2() - 1
-   
-    matrixK[index1:index1] += localK[0:1]
-    matrixK[index1:index2] += localK[0:2]
-    matrixK[index2:index1] += localK[:1]
-    matrixK[index2:index1] += localK[1:2]
-
+ 
+    matrixK[index1][index1] += localK[0][0]
+    matrixK[index1][index2] += localK[0][1]
+    matrixK[index2][index1] += localK[1][0]
+    matrixK[index2][index2] += localK[1][1]
+    
 def assemblyB(element, localB, vectorB):
     index1 = element.getNode1() - 1
     index2 = element.getNode2() - 1
@@ -98,7 +95,6 @@ def ensamblaje(mesh, localKs, localBs, K, b):
     #ELEMENTS = 1
     for i in range(0, mesh.getSize(1)):
         element = mesh.getElement(i)
-        #print(element.getNode1())
         assemblyK(element, localKs[i], K)
         assemblyB(element, localBs[i], b)
 
@@ -106,7 +102,6 @@ def ensamblaje(mesh, localKs, localBs, K, b):
 def applyNeumann(mesh, b):
     # sizes[3] = cantidad de condiciones de neumann
     for i in range(0, mesh.getSize(3)):
-
         condition = mesh.getCondition(i, classes.Sizes.NEUMANN)
         b[condition.getNode1()-1] += condition.getValue()
 
@@ -116,19 +111,16 @@ def applyDirichlet(mesh, K, b):
         
         condition = mesh.getCondition(i, classes.Sizes.DIRICHLET)
         index = condition.getNode1() - 1
-        
+       
         K.pop(index)
         
         b.pop(index)
-
+        
         for row in range(0, len(K)):
-            
             cell = K[row][index]
             K[row].pop(index)
             b[row] = b[row] + (-1 * condition.getValue() * cell)
-
-##SI LOS CALCULOS NO PEGAN, PROBABLEMENTE SEA PORQUE LOS ARREGLOS
-# SON MATRICES Y NO SOLO []. REVISARA EN TODOS LOS ARCHIVOS
+    
 
 def calculate(K, b, T):
     Kinversa = []
@@ -136,4 +128,5 @@ def calculate(K, b, T):
     math_tools.inverseMatrix(K, Kinversa)
 
     ## Hacer estas funciones en math_tools.py
-    math_tools.productMatrixVector(K, b, T)
+    math_tools.productMatrixVector(Kinversa, b, T)
+   

@@ -10,8 +10,8 @@ Sizes = Enum('Sizes', 'NODES ELEMENTS DIRICHLET NEUMANN')
 class item:
     id = 0
     x = 0.0
-    node1 = 1
-    node2 = 1
+    node1 = 0
+    node2 = 0
     value = 0.0
 
     def getId(self):
@@ -34,8 +34,8 @@ class item:
 class Node (item):
 
     def sentIntFloat(self, identifier, x_coordinate):
-        item.id = identifier
-        item.x = x_coordinate
+        self.id = identifier
+        self.x = x_coordinate
 
     def sentIntIntInt(self, n1, n2, n3):
         pass
@@ -46,15 +46,15 @@ class Element(item):
         pass
     
     def sentIntIntInt(self, identifier, firstNode, secondNode):
-        item.id = identifier
-        item.node1 = firstNode
-        item.node2 = secondNode
+        self.id = identifier
+        self.node1 = firstNode
+        self.node2 = secondNode
 
 class Condition(item):
     
     def sentIntFloat(self, node_to_apply, prescribed_value):
-        item.node1 = node_to_apply
-        item.value = prescribed_value
+        self.node1 = node_to_apply
+        self.value = prescribed_value
     
     def sentIntIntInt(self, identifier, firstNode, secondNode):
         pass
@@ -90,20 +90,20 @@ class Mesh:
     def createData(self):
         
         for i in range(self.sizes[0]):
-            obj = Node()
-            self.node_list.append(obj)# * self.sizes[0]
+            obj1 = Node()
+            self.node_list.append(obj1)# * self.sizes[0]
         
         for i in range(self.sizes[1]):
-            obj = Element()
-            self.element_list.append(obj)# * self.sizes[0]
+            obj2 = Element()
+            self.element_list.append(obj2)# * self.sizes[0]
         
         for i in range(self.sizes[2]):
-            obj = Condition()
-            self.dirichlet_list.append(obj)# * self.sizes[0]
+            obj3 = Condition()
+            self.dirichlet_list.append(obj3)# * self.sizes[0]
 
         for i in range(self.sizes[3]):
-            obj = Condition()
-            self.neumann_list.append(obj)# * self.sizes[0]
+            obj4 = Condition()
+            self.neumann_list.append(obj4)# * self.sizes[0]
 
         
 
