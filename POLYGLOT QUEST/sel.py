@@ -2,42 +2,41 @@ import classes
 import math_tools
 
 def showMatrix(kMatrix):
-    for i in range(0,len(kMatrix[0]) + 1):
-        print('{\t')
-        for j in range(0, len(kMatrix) + 1):
-            print(kMatrix[i][j] + "\t")
-        print("}\n")
+    for i in range(0,len(kMatrix[0])):
+        print('[',end=" ")
+        for j in range(0, len(kMatrix)):
+            print(str(kMatrix[i][j]),end=" " )
+        print("]")
+        
 
 def showKs(KsMatrix):
-    for i in range(0, len(KsMatrix) + 1):
-        print("K del elemento " + (i + 1) + ":\n")
+    for i in range(0, len(KsMatrix)):
+        print("K del elemento " + str(i + 1) + ":\n")
         showMatrix(KsMatrix[i])
         print("************************************\n")
 
 def showVector(Vector):
-    print("{\t")
-    for i in range(0, len(Vector) + 1):
-        print(Vector[i] + "\t")
-    print("}\n")
+    print("[",end=" ")
+    for i in range(0, len(Vector)):
+        print(str(Vector[i]), end = " ")
+    print("]",end=" ")
 
 def showbs(bs):
-    for i in range(0, len(bs) + 1):
-        print("b del elemento " + i+1 + ":\n")
+    for i in range(0, len(bs)):
+        print("b del elemento " + str(i+1) + ":")
         showVector(bs[i])
-        print("****************************\n")
+        print("\n****************************")
 
 # SI PETA, ES PORQUE MESH NO DEBERIA SER CREADO EN LA FUNCION
 # SINO PASADO COMO ARGUMENTO
-def createLocalK(element, mesh):
-
-    
+def createLocalK(element, mesh):    
 
     K = []
     row1 = []
     row2 = []
 
-    k = mesh.getParameter(classes.Parameters.THERMAL_CONDUCTIVITY)
-    l = mesh.getParameter(classes.Parameters.ELEMENT_LENGTH)
+    k = mesh.getParameter(classes.Parameters.THERMAL_CONDUCTIVITY.value - 1)
+    l = mesh.getParameter(classes.Parameters.ELEMENT_LENGTH.value - 1)
 
     row1.append(k/l)
     row1.append(-k/l)
@@ -57,8 +56,8 @@ def createLocalb(element, mesh):
     b = []
     
     
-    Q = mesh.getParameter(classes.Parameters.HEAT_SOURCE)
-    l = mesh.getParameter(classes.Parameters.ELEMENT_LENGTH)
+    Q = mesh.getParameter(classes.Parameters.HEAT_SOURCE.value - 1)
+    l = mesh.getParameter(classes.Parameters.ELEMENT_LENGTH.value - 1)
     
     b.append( Q*l/2)
     b.append( Q*l/2)
@@ -69,19 +68,24 @@ def createLocalb(element, mesh):
 # SI PETA, ES PORQUE MESH NO DEBERIA SER CREADO EN LA FUNCION
 # SINO PASADO COMO ARGUMENTO
 def crearSistemasLocales(mesh, localKs, localBs):
-
-    for i in range(0, mesh.getParameter(classes.Sizes.ELEMENTS)):
+    
+    for i in range(0, mesh.getSize(classes.Sizes.ELEMENTS.value - 1)):
         localKs.append(createLocalK(i, mesh))
         localBs.append(createLocalb(i, mesh))
 
 def assemblyK(element, localK, matrixK):
+
+    #print("Element getNode1()= " + str(element.getNode1()))
+    #print("Element getNode2()= " + str(element.getNode2()))
+    
+    
     index1 = element.getNode1() - 1
     index2 = element.getNode2() - 1
-
-    matrixK[index1][index1] += localK[0][0]
-    matrixK[index1][index2] += localK[0][1]
-    matrixK[index2][index1] += localK[1][0]
-    matrixK[index2][index1] += localK[1][1]
+   
+    matrixK[index1:index1] += localK[0:1]
+    matrixK[index1:index2] += localK[0:2]
+    matrixK[index2:index1] += localK[:1]
+    matrixK[index2:index1] += localK[1:2]
 
 def assemblyB(element, localB, vectorB):
     index1 = element.getNode1() - 1
@@ -91,31 +95,37 @@ def assemblyB(element, localB, vectorB):
     vectorB[index2] += localB[1]
 
 def ensamblaje(mesh, localKs, localBs, K, b):
-    for i in range(0, mesh.getSize(classes.Sizes.ELEMENTS) + 1):
+    #ELEMENTS = 1
+    for i in range(0, mesh.getSize(1)):
         element = mesh.getElement(i)
+        #print(element.getNode1())
         assemblyK(element, localKs[i], K)
         assemblyB(element, localBs[i], b)
 
 
 def applyNeumann(mesh, b):
-    for i in range(0, mesh.getSize(classes.Sizes.NEUMANN)):
+    # sizes[3] = cantidad de condiciones de neumann
+    for i in range(0, mesh.getSize(3)):
 
         condition = mesh.getCondition(i, classes.Sizes.NEUMANN)
         b[condition.getNode1()-1] += condition.getValue()
 
 def applyDirichlet(mesh, K, b):
-    for i in range(0, mesh.getSize(classes.Sizes.DIRICHLET) + 1):
+    # sizes[2] = cantidad de condiciones de dirichlet
+    for i in range(0, mesh.getSize(2)):
         
         condition = mesh.getCondition(i, classes.Sizes.DIRICHLET)
         index = condition.getNode1() - 1
-
+        
         K.pop(index)
+        
         b.pop(index)
 
-        for row in range(0, len(K) + 1):
+        for row in range(0, len(K)):
+            
             cell = K[row][index]
-            K[0].pop(index)
-            b[row] += -1 * condition.getValue() * cell
+            K[row].pop(index)
+            b[row] = b[row] + (-1 * condition.getValue() * cell)
 
 ##SI LOS CALCULOS NO PEGAN, PROBABLEMENTE SEA PORQUE LOS ARREGLOS
 # SON MATRICES Y NO SOLO []. REVISARA EN TODOS LOS ARCHIVOS

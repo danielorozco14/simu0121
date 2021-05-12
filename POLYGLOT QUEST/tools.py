@@ -8,24 +8,29 @@ def obtenerDatos(file, nlines, n, mode, item_list):
         file.readline()
 
     index = 0
+    limit = n
     for f in file:
         
-            if(mode == classes.Modes.INT_FLOAT and n > 0):
+            if(mode == classes.Modes.INT_FLOAT and limit > 0):
                 row = f.split()
                 if(len(row) > 1):
+                    #print("index:"+str(index)+" n:"+str(limit))
                     e = int(row[0])
                     r = float(row[1])
-                    n -= 1
+                    #print(str(e) + " " + str(r))
+                    limit -= 1
                     item_list[index].sentIntFloat(e, r)
+                                
                     index += 1
-
-            if(mode == classes.Modes.INT_INT_INT and n > 0):
+    
+            elif(mode == classes.Modes.INT_INT_INT and limit > 0):
+                
                 row = f.split()
                 if(len(row) > 1):
                     e1 = int(row[0])
                     e2 = int(row[1])
                     e3 = int(row[2])
-                    n -= 1
+                    limit -= 1
                     item_list[index].sentIntIntInt(e1, e2, e3)
                     index += 1
       
@@ -33,7 +38,7 @@ def obtenerDatos(file, nlines, n, mode, item_list):
 
 
 
-def leerMallayCondiciones(Mesh: classes.Mesh):
+def leerMallayCondiciones(Mesh):
     filename = ""
     flag = True
    
@@ -50,7 +55,7 @@ def leerMallayCondiciones(Mesh: classes.Mesh):
                         l = float(file_line[0])
                         k = float(file_line[1])
                         Q = float(file_line[2])
-                        
+
                     if(cont == 1):
                         nNodes = int(file_line[0])
                         nElemts = int(file_line[1])
@@ -62,11 +67,15 @@ def leerMallayCondiciones(Mesh: classes.Mesh):
                     cont += 1             
 
                 Mesh.setParameters(l,k,Q)
+                
                 Mesh.setSizes(nNodes, nElemts, nDirich, nNeumn)
                 Mesh.createData()
 
+                
                 obtenerDatos(file, classes.Lines.SINGLELINE, nNodes, classes.Modes.INT_FLOAT, Mesh.getNodes())
-                obtenerDatos(file, classes.Lines.DOUBLELINE, nElemts, classes.Modes.INT_INT_INT, Mesh.getElements())
+                
+                obtenerDatos(file, classes.Lines.DOUBLELINE, nElemts, classes.Modes.INT_INT_INT.value, Mesh.getElements())
+                
                 obtenerDatos(file, classes.Lines.DOUBLELINE, nDirich, classes.Modes.INT_FLOAT, Mesh.getDirichlet())
                 obtenerDatos(file, classes.Lines.DOUBLELINE, nNeumn, classes.Modes.INT_FLOAT, Mesh.getNeumann())
 
@@ -75,3 +84,5 @@ def leerMallayCondiciones(Mesh: classes.Mesh):
 
         except (FileNotFoundError):
             print("El archivo no ha sido encontrado")
+
+

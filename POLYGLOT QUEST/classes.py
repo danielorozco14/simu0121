@@ -8,39 +8,34 @@ Parameters = Enum('Parameters', 'ELEMENT_LENGTH THERMAL_CONDUCTIVITY HEAT_SOURCE
 Sizes = Enum('Sizes', 'NODES ELEMENTS DIRICHLET NEUMANN')
 
 class item:
-    _id = 0
-    _x = 0.0
-    _node1 = 0
-    _node2 = 0
-    _value = 0.0
+    id = 0
+    x = 0.0
+    node1 = 1
+    node2 = 1
+    value = 0.0
 
     def getId(self):
-        return self._id
+        return self.id
     
     def getX(self):
-        return self._x
+        return self.x
     
     def getNode1(self):
-        return self._node1
+        return self.node1
     
     def getNode2(self):
-        return self._node2
+        return self.node2
     
     def getValue(self):
-        return self._value
+        return self.value
 
-    def sentIntFloat(self, n, r):
-        return 0
-   
-    def sentIntIntInt(self, n1, n2, n3):
-        return 0
 
 
 class Node (item):
 
     def sentIntFloat(self, identifier, x_coordinate):
-        self._id = identifier
-        self._x = x_coordinate
+        item.id = identifier
+        item.x = x_coordinate
 
     def sentIntIntInt(self, n1, n2, n3):
         pass
@@ -51,15 +46,15 @@ class Element(item):
         pass
     
     def sentIntIntInt(self, identifier, firstNode, secondNode):
-        self._id = identifier
-        self._node1 = firstNode
-        self._node2 = secondNode
+        item.id = identifier
+        item.node1 = firstNode
+        item.node2 = secondNode
 
 class Condition(item):
     
     def sentIntFloat(self, node_to_apply, prescribed_value):
-        self._node1 = node_to_apply
-        self._value = prescribed_value
+        item.node1 = node_to_apply
+        item.value = prescribed_value
     
     def sentIntIntInt(self, identifier, firstNode, secondNode):
         pass
@@ -67,10 +62,10 @@ class Condition(item):
 class Mesh:
     parameters = []
     sizes = []
-    node_list = Node()
-    element_list = Element()
-    dirichlet_list = Condition()
-    neumann_list = Condition()
+    node_list = []
+    element_list = []
+    dirichlet_list = []
+    neumann_list = []
 
     def setParameters(self, l, k, Q):
         
@@ -90,15 +85,26 @@ class Mesh:
         return self.sizes[s]
 
     def getParameter(self, p):
-        return self.sizes[p]
+        return self.parameters[p]
 
-    ##SI REVIENTA ES POR ESTE METODO
     def createData(self):
         
-        self.node_list =  [Node()] * self.sizes[0]
-        self.element_list = [Element()] * self.sizes[1]
-        self.dirichlet_list = [Condition()] * self.sizes[2]
-        self.neumann_list = [Condition()] * self.sizes[3]
+        for i in range(self.sizes[0]):
+            obj = Node()
+            self.node_list.append(obj)# * self.sizes[0]
+        
+        for i in range(self.sizes[1]):
+            obj = Element()
+            self.element_list.append(obj)# * self.sizes[0]
+        
+        for i in range(self.sizes[2]):
+            obj = Condition()
+            self.dirichlet_list.append(obj)# * self.sizes[0]
+
+        for i in range(self.sizes[3]):
+            obj = Condition()
+            self.neumann_list.append(obj)# * self.sizes[0]
+
         
 
     def getNodes(self):
