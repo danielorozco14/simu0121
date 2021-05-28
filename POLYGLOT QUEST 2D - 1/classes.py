@@ -1,18 +1,44 @@
 from enum import Enum
 
 ## enums
+class Indicators (Enum):
+    NOTHING = 0
 
 Lines = Enum('Lines', 'NOLINE SINGLELINE DOUBLELINE')
-Modes = Enum ('Modes', 'NOMODE INT_FLOAT INT_INT_INT')
-Parameters = Enum('Parameters', 'ELEMENT_LENGTH THERMAL_CONDUCTIVITY HEAT_SOURCE')
+Modes = Enum ('Modes', 'NOMODE INT_FLOAT INT_FLOAT_FLOAT INT_INT_INT_INT')
+Parameters = Enum('Parameters', 'THERMAL_CONDUCTIVITY HEAT_SOURCE')
 Sizes = Enum('Sizes', 'NODES ELEMENTS DIRICHLET NEUMANN')
+###
 
 class item:
     id = 0
     x = 0.0
+    y = 0.0
     node1 = 0
     node2 = 0
+    node3 = 0
     value = 0.0
+
+    def setId(self, id):
+        self.id = id
+
+    def setX(self, x_coordinate):
+        self.x = x_coordinate
+
+    def setY(self, y_coordinate):
+        self.y = y_coordinate
+    
+    def setNode1(self, node1):
+        self.node1 = node1
+    
+    def setNode2(self, node2):
+        self.node2 = node2
+    
+    def setNode3(self, node3):
+        self.node3 = node3
+
+    def setValue(self, value):
+        self.value = value
 
     def getId(self):
         return self.id
@@ -20,56 +46,58 @@ class item:
     def getX(self):
         return self.x
     
+    def getY(self):
+        return self.y
+    
     def getNode1(self):
         return self.node1
     
     def getNode2(self):
         return self.node2
     
+    def getNode3(self):
+        return self.node3
+    
     def getValue(self):
         return self.value
+    
 
 
 
 class Node (item):
 
-    def sentIntFloat(self, identifier, x_coordinate):
-        self.id = identifier
-        self.x = x_coordinate
+    def setValues(self, a, b, c):
+        self.id = a
+        self.x = b
+        self.y = c
 
-    def sentIntIntInt(self, n1, n2, n3):
-        pass
+
 
 class Element(item):
     
-    def sentIntFloat(self, n1, r):
-        pass
-    
-    def sentIntIntInt(self, identifier, firstNode, secondNode):
-        self.id = identifier
-        self.node1 = firstNode
-        self.node2 = secondNode
+   def setValues(self, a, d, e, f):
+       self.id = a
+       self.node1 = d
+       self.node2 = e
+       self.node3 = f
 
 class Condition(item):
     
-    def sentIntFloat(self, node_to_apply, prescribed_value):
-        self.node1 = node_to_apply
-        self.value = prescribed_value
-    
-    def sentIntIntInt(self, identifier, firstNode, secondNode):
-        pass
+    def setValues(self, d, g):
+        self.node1 = d
+        self.value = g
 
 class Mesh:
     parameters = []
     sizes = []
     node_list = []
     element_list = []
-    dirichlet_list = []
-    neumann_list = []
+    indices_dirich = []
 
-    def setParameters(self, l, k, Q):
-        
-        self.parameters.insert(Parameters.ELEMENT_LENGTH.value -1,l)
+    dirichlet_list = [] #Array containing Dirichlet objects
+    neumann_list = [] #Array containing Neumann objects
+
+    def setParameters(self, k, Q):
         self.parameters.insert(Parameters.THERMAL_CONDUCTIVITY.value - 1, k)
         self.parameters.insert(Parameters.HEAT_SOURCE.value - 1, Q)
     
@@ -105,6 +133,8 @@ class Mesh:
             obj4 = Condition()
             self.neumann_list.append(obj4)# * self.sizes[0]
 
+        self.indices_dirich = [0] * self.sizes[2] #DIRICH SIZE INDEX = 2 IN sizes Array
+
         
 
     def getNodes(self):
@@ -112,6 +142,9 @@ class Mesh:
     
     def getElements(self):
         return self.element_list
+
+    def getDirichletIndices(self):
+        return self.indices_dirich
 
     def getDirichlet(self):
         return self.dirichlet_list
@@ -126,7 +159,7 @@ class Mesh:
         return self.element_list[i]
     
     def getCondition(self, i, type):
-        #Talvez pete aqui, agregar el .value al Sizes.DIRICHLET
+        
         if(type == Sizes.DIRICHLET):
             return self.dirichlet_list[i]
         else:

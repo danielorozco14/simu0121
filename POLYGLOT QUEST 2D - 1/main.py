@@ -6,6 +6,8 @@ import sel
 
 def main():
     #[0] * 1
+    filename =""
+
     localKs = []
     localBs = []
 
@@ -13,12 +15,12 @@ def main():
     vector_b = []
     vector_T = []
 
-    print("IMPLEMENTACION DEL METODO DE LOS ELEMENTOS FINITOS EN UNA DIMENSION")
-    print("\tTRANSFERENCIA DE CALOR\t- 1 DIMENSIÓN")
+    print("IMPLEMENTACION DEL METODO DE LOS ELEMENTOS FINITOS EN 2D")
+    print("\tTRANSFERENCIA DE CALOR\t- 2 DIMENSIÓNES")
     print("\tFUNCIONES DE FORMA LINEALES\t- PESOS DE GALERKIN")
 
     Mesh = classes.Mesh()
-    tools.leerMallayCondiciones(Mesh)
+    tools.leerMallayCondiciones(Mesh, filename)
 
     
     sel.crearSistemasLocales(Mesh, localKs, localBs)
@@ -33,6 +35,7 @@ def main():
     math_tools.zeroes(vector_b, Mesh.getSize(classes.Sizes.NODES.value - 1))
     
     sel.ensamblaje(Mesh, localKs, localBs, matrix_K, vector_b)
+
     sel.applyNeumann(Mesh, vector_b)
     sel.applyDirichlet(Mesh, matrix_K, vector_b)
     
@@ -40,8 +43,12 @@ def main():
 
     sel.calculate(matrix_K, vector_b, vector_T)
 
+    '''
     print("La respuesta es: ")
     sel.showVector(vector_T)
+    '''
+    tools.writeResults(Mesh, vector_T, filename)
 
+##CALLING MAIN
 main()
 
