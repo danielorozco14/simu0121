@@ -14,24 +14,24 @@ public class MainPanel extends JPanel implements ActionListener {
     boolean TRANSLATE_FLAG = false;
 
     //X,Y coordinates for Labels
-    static final int LABEL_X = 500;
+    static final int LABEL_X = 600;
     static final int LABEL_Y = 25;
     static final int LABEL_WIDTH = 125;
     static final int LABEL_HEIGHT = 10;
 
     //X,Y coordinates for PLUS and MINUS Buttons
-    static final int MINUS_BUTTON_X = 488;
+    static final int MINUS_BUTTON_X = 588;
     static final int BUTTON_Y = 25;
-    static final int PLUS_BUTTON_X = 567;
+    static final int PLUS_BUTTON_X = 667;
 
     static final int BUTTON_WIDTH = 50;
     static final int BUTTON_HEIGHT = 25;
 
     //Initial coordinates for drawing the SQUARE
-    int SQUARE_X = 85;
+    int SQUARE_X = 95;
     int SQUARE_Y = 125;
-    int SQUARE_WIDTH = 125;
-    int SQUARE_HEIGHT = 125;
+    int SQUARE_WIDTH = 100;
+    int SQUARE_HEIGHT = 100;
     //COUNTERS
 
     int escaleCounter = 1;
@@ -59,7 +59,8 @@ public class MainPanel extends JPanel implements ActionListener {
     JButton buttonMinus3 = new JButton("-");
 
 
-
+    //Defining Rectangle
+    Rectangle rect = new Rectangle(SQUARE_X,SQUARE_Y,SQUARE_WIDTH,SQUARE_HEIGHT);
 
 
     public MainPanel() {
@@ -68,7 +69,7 @@ public class MainPanel extends JPanel implements ActionListener {
         this.setLayout(null);
 
         //Set size of the panel
-        this.setPreferredSize(new Dimension(700, 350));
+        this.setPreferredSize(new Dimension(750, 550));
 
         // Add labels to panel,set location and  properties of Labels
         setLabelsProperties();
@@ -91,48 +92,43 @@ public class MainPanel extends JPanel implements ActionListener {
     @Override
     public void paintComponent(Graphics g){
         super.paintComponent(g);
-
         Graphics2D graphics = (Graphics2D) g;
-        graphics.fillRect(SQUARE_X,SQUARE_Y,SQUARE_WIDTH,SQUARE_HEIGHT);
+        //graphics.drawRect(SQUARE_X,SQUARE_Y,SQUARE_WIDTH,SQUARE_HEIGHT);
+        g.setColor(Color.BLUE);
+        graphics.draw(rect);
 
         if(ROTATE_FLAG){
             rotateSquare(graphics, rotationCounter);
         }
         if(ESCALE_FLAG){
-            graphics.fillRect(SQUARE_X, SQUARE_Y,
-                    SQUARE_WIDTH + (escaleCounter * 10 ),
+            scaleSquare(graphics,SQUARE_WIDTH + (escaleCounter * 10 ),
                     SQUARE_HEIGHT + (escaleCounter * 10));
         }
         if(TRANSLATE_FLAG){
-            graphics.fillRect(
+            translateSquare(graphics,
                     SQUARE_X + (translationCounter * 25),
-                    SQUARE_Y + (translationCounter * 25), SQUARE_WIDTH, SQUARE_HEIGHT);
+                    SQUARE_Y + (translationCounter * 25));
         }
+
+        //graphics.fillRect(SQUARE_X,SQUARE_Y,SQUARE_WIDTH,SQUARE_HEIGHT);
     }
 
-    public void drawSquare(Graphics2D graphics){
+    public void scaleSquare(Graphics2D g, int SQUARE_WIDTH, int SQUARE_HEIGHT){
+
         //Setting the color of the Square
-        graphics.setColor(Color.WHITE);
-        graphics.fillRect(SQUARE_X,SQUARE_Y,SQUARE_WIDTH,SQUARE_HEIGHT);
-
-
+       // Graphics2D g2D = (Graphics2D) g.create();
+        // rect.setBounds(SQUARE_X,SQUARE_Y,SQUARE_WIDTH,SQUARE_HEIGHT);
+        rect.setSize(SQUARE_WIDTH, SQUARE_HEIGHT);
     }
 
-    public void drawSquare(Graphics2D g, int SQUARE_X, int SQUARE_Y,
-                           int SQUARE_WIDTH, int SQUARE_HEIGHT){
-
-        //Setting the color of the Square
-        Graphics2D g2D = (Graphics2D) g.create();
-        g2D.setColor(Color.BLUE);
-        g2D.fillRect(SQUARE_X,SQUARE_Y,SQUARE_WIDTH,SQUARE_HEIGHT);
+    public void translateSquare(Graphics2D g,int SQUARE_X, int SQUARE_Y){
+        rect.setLocation(SQUARE_X, SQUARE_Y);
     }
 
     public void rotateSquare(Graphics2D g, double rotationCounter){
         Graphics2D g2D = (Graphics2D) g.create();
-        g2D.rotate(rotationCounter, 124,125);
-        g2D.setColor(Color.GREEN);
-        g2D.fillRect(SQUARE_X,SQUARE_Y,SQUARE_WIDTH,SQUARE_HEIGHT);
-
+        g2D.rotate(rotationCounter, 173,188);
+        g2D.fill(rect);
     }
 
     public void setLabelsProperties(){
@@ -257,7 +253,7 @@ public class MainPanel extends JPanel implements ActionListener {
 
     public void plusButtonsActions(ActionEvent ae){
         if(ae.getSource() == buttonPlus1){
-            if(escaleCounter < 5){
+            if(escaleCounter < 6){
                 escaleCounter++;
                 ESCALE_FLAG = true;
                 jCounter1.setText(Integer.toString(escaleCounter));
@@ -265,7 +261,7 @@ public class MainPanel extends JPanel implements ActionListener {
         }
 
         if(ae.getSource() == buttonPlus2){
-            if(rotationCounter < 5){
+            if(rotationCounter < 6){
                 rotationCounter++;
                 ROTATE_FLAG = true;
                 jCounter2.setText(Integer.toString(rotationCounter));
@@ -273,7 +269,7 @@ public class MainPanel extends JPanel implements ActionListener {
         }
 
         if(ae.getSource() == buttonPlus3){
-            if(translationCounter < 5){
+            if(translationCounter < 6){
                 translationCounter++;
                 TRANSLATE_FLAG = true;
                 jCounter3.setText(Integer.toString(translationCounter));
