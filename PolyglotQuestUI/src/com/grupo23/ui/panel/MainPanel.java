@@ -4,12 +4,11 @@ import javax.swing.*;
 import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
-import java.awt.geom.AffineTransform;
 
 public class MainPanel extends JPanel implements ActionListener {
 
     //Flags to know if an Action was done
-    boolean ESCALE_FLAG = false;
+    boolean SCALE_FLAG = false;
     boolean ROTATE_FLAG = false;
     boolean TRANSLATE_FLAG = false;
 
@@ -34,7 +33,7 @@ public class MainPanel extends JPanel implements ActionListener {
     int SQUARE_HEIGHT = 100;
     //COUNTERS
 
-    int escaleCounter = 1;
+    int scaleCounter = 1;
     int translationCounter = 1;
     int rotationCounter = 1;
 
@@ -93,41 +92,37 @@ public class MainPanel extends JPanel implements ActionListener {
     public void paintComponent(Graphics g){
         super.paintComponent(g);
         Graphics2D graphics = (Graphics2D) g;
-        //graphics.drawRect(SQUARE_X,SQUARE_Y,SQUARE_WIDTH,SQUARE_HEIGHT);
-        g.setColor(Color.BLUE);
+        g.setColor(Color.RED);
         graphics.draw(rect);
 
         if(ROTATE_FLAG){
             rotateSquare(graphics, rotationCounter);
         }
-        if(ESCALE_FLAG){
-            scaleSquare(graphics,SQUARE_WIDTH + (escaleCounter * 10 ),
-                    SQUARE_HEIGHT + (escaleCounter * 10));
+        if(SCALE_FLAG){
+            scaleSquare(SQUARE_WIDTH + (scaleCounter * 10 ),
+                    SQUARE_HEIGHT + (scaleCounter * 10));
         }
         if(TRANSLATE_FLAG){
-            translateSquare(graphics,
+            translateSquare(
                     SQUARE_X + (translationCounter * 25),
                     SQUARE_Y + (translationCounter * 25));
         }
 
-        //graphics.fillRect(SQUARE_X,SQUARE_Y,SQUARE_WIDTH,SQUARE_HEIGHT);
     }
 
-    public void scaleSquare(Graphics2D g, int SQUARE_WIDTH, int SQUARE_HEIGHT){
+    public void scaleSquare( int SQUARE_WIDTH, int SQUARE_HEIGHT){
 
-        //Setting the color of the Square
-       // Graphics2D g2D = (Graphics2D) g.create();
-        // rect.setBounds(SQUARE_X,SQUARE_Y,SQUARE_WIDTH,SQUARE_HEIGHT);
         rect.setSize(SQUARE_WIDTH, SQUARE_HEIGHT);
     }
 
-    public void translateSquare(Graphics2D g,int SQUARE_X, int SQUARE_Y){
+    public void translateSquare(int SQUARE_X, int SQUARE_Y){
         rect.setLocation(SQUARE_X, SQUARE_Y);
     }
 
     public void rotateSquare(Graphics2D g, double rotationCounter){
         Graphics2D g2D = (Graphics2D) g.create();
         g2D.rotate(rotationCounter, 173,188);
+        g2D.setColor(Color.WHITE);
         g2D.fill(rect);
     }
 
@@ -226,10 +221,10 @@ public class MainPanel extends JPanel implements ActionListener {
 
     public void minusButtonsActions(ActionEvent ae){
         if(ae.getSource() == buttonMinus1){
-            if(escaleCounter > 1){
-                escaleCounter--;
-                ESCALE_FLAG = true;
-                jCounter1.setText(Integer.toString(escaleCounter));
+            if(scaleCounter > 1){
+                scaleCounter--;
+                SCALE_FLAG = true;
+                jCounter1.setText(Integer.toString(scaleCounter));
             }
         }
 
@@ -253,10 +248,10 @@ public class MainPanel extends JPanel implements ActionListener {
 
     public void plusButtonsActions(ActionEvent ae){
         if(ae.getSource() == buttonPlus1){
-            if(escaleCounter < 6){
-                escaleCounter++;
-                ESCALE_FLAG = true;
-                jCounter1.setText(Integer.toString(escaleCounter));
+            if(scaleCounter < 6){
+                scaleCounter++;
+                SCALE_FLAG = true;
+                jCounter1.setText(Integer.toString(scaleCounter));
             }
         }
 
