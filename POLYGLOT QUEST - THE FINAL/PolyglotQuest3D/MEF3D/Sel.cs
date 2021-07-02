@@ -27,7 +27,7 @@ namespace MEF3D
             }
         }
 
-        void showKs(List<Matrix> Ks)
+       public void showKs(List<Matrix> Ks)
         {
             for (int i = 0; i < Ks.Count; i++)
             {
@@ -145,20 +145,26 @@ namespace MEF3D
         public Matrix createLocalK(int element, Classes.mesh m)
         {
             // K = (k*Ve/D^2)Bt*At*A*B := K_4x4
-            float D, Ve, k = m.getParameter(((int)Classes.parameter.THERMAL_CONDUCTIVITY);
-            Matrix K, A, B, Bt, At;
+            float D, Ve, k = m.getParameter((int)Classes.parameter.THERMAL_CONDUCTIVITY);
+            Matrix K = new Matrix();
+            Matrix A = new Matrix();
+            Matrix B = new Matrix();
+            Matrix Bt = new Matrix();
+            Matrix At = new Matrix();
 
             D = calculateLocalD(element, m);
             Ve = calculateLocalVolume(element, m);
 
-            zeroes(A, 3);
-            zeroes(B, 3, 4);
+            Math_tools.zeroes(A, 3);
+            Math_tools.zeroes(B, 3, 4);
             calculateLocalA(element, A, m);
             calculateB(B);
-            transpose(A, At);
-            transpose(B, Bt);
+            Math_tools.transpose(A, At);
+            Math_tools.transpose(B, Bt);
 
-            productRealMatrix(k * Ve / (D * D), productMatrixMatrix(Bt, productMatrixMatrix(At, productMatrixMatrix(A, B, 3, 3, 4), 3, 3, 4), 4, 3, 4), K);
+            Math_tools.productRealMatrix(k * Ve / (D * D),
+                Math_tools.productMatrixMatrix(Bt, Math_tools.productMatrixMatrix(At,Math_tools.productMatrixMatrix(A, B, 3, 3, 4), 3, 3, 4),
+                4, 3, 4), K);
 
             return K;
         }
@@ -287,13 +293,13 @@ namespace MEF3D
         public void calculate(Matrix K, Vector b, Vector T)
         {
             Console.WriteLine("Iniciando calculo de respuesta...");
-            Matrix Kinv;
+            Matrix Kinv = new Matrix();
 
             Console.WriteLine("Calculo de inversa...");
-            inverseMatrix(K, Kinv);//TODO 
+            Math_tools.inverseMatrix(K, Kinv);//TODO 
 
             Console.WriteLine("Calculo de respuesta...");
-            productMatrixVector(Kinv, b, T);//TODO
+            Math_tools.productMatrixVector(Kinv, b, T);//TODO
         }
     }
 }
