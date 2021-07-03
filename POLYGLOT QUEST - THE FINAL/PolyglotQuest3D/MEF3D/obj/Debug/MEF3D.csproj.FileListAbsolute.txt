@@ -1,0 +1,7 @@
+C:\Users\usuario\Desktop\SIMU\simu0121\POLYGLOT QUEST - THE FINAL\PolyglotQuest3D\MEF3D\bin\Debug\MEF3D.exe.config
+C:\Users\usuario\Desktop\SIMU\simu0121\POLYGLOT QUEST - THE FINAL\PolyglotQuest3D\MEF3D\bin\Debug\MEF3D.exe
+C:\Users\usuario\Desktop\SIMU\simu0121\POLYGLOT QUEST - THE FINAL\PolyglotQuest3D\MEF3D\bin\Debug\MEF3D.pdb
+C:\Users\usuario\Desktop\SIMU\simu0121\POLYGLOT QUEST - THE FINAL\PolyglotQuest3D\MEF3D\obj\Debug\MEF3D.csprojAssemblyReference.cache
+C:\Users\usuario\Desktop\SIMU\simu0121\POLYGLOT QUEST - THE FINAL\PolyglotQuest3D\MEF3D\obj\Debug\MEF3D.csproj.CoreCompileInputs.cache
+C:\Users\usuario\Desktop\SIMU\simu0121\POLYGLOT QUEST - THE FINAL\PolyglotQuest3D\MEF3D\obj\Debug\MEF3D.exe
+C:\Users\usuario\Desktop\SIMU\simu0121\POLYGLOT QUEST - THE FINAL\PolyglotQuest3D\MEF3D\obj\Debug\MEF3D.pdb

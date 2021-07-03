@@ -4,7 +4,7 @@ using System.Collections;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
-
+using MEF3D.Helpers;
 
 namespace MEF3D
 {
@@ -58,16 +58,16 @@ namespace MEF3D
             }
         }
 
-        public float calculateLocalD(int ind, Classes.mesh m)
+        public float calculateLocalD(int ind, Mesh m)
         {
             float D, a, b, c, d, e, f, g, h, i;
 
-            Classes.element el = m.getElement(ind);
+            Element el = m.getElement(ind);
 
-            Classes.node n1 = m.getNode(el.node1 - 1);
-            Classes.node n2 = m.getNode(el.node2 - 1);
-            Classes.node n3 = m.getNode(el.node3 - 1);
-            Classes.node n4 = m.getNode(el.node4 - 1);
+            Node n1 = m.getNode(el.node1 - 1);
+            Node n2 = m.getNode(el.node2 - 1);
+            Node n3 = m.getNode(el.node3 - 1);
+            Node n4 = m.getNode(el.node4 - 1);
 
             a = n2.x - n1.x; b = n2.y - n1.y; c = n2.z - n1.z;
             d = n3.x - n1.x; e = n3.y - n1.y; f = n3.z - n1.z;
@@ -79,7 +79,7 @@ namespace MEF3D
             return D;
         }
 
-        public float calculateLocalVolume(int ind, Classes.mesh m)
+        public float calculateLocalVolume(int ind, Mesh m)
         {
             //Se utiliza la siguiente fórmula:
             //      Dados los 4 puntos vértices del tetrahedro A, B, C, D.
@@ -91,11 +91,11 @@ namespace MEF3D
             //              V = (1/6)*det(  [ V1' ; V2' ; V3' ]  )
 
             float V, a, b, c, d, e, f, g, h, i;
-            Classes.element el = m.getElement(ind);
-            Classes.node n1 = m.getNode(el.node1 - 1);
-            Classes.node n2 = m.getNode(el.node2 - 1);
-            Classes.node n3 = m.getNode(el.node3 - 1);
-            Classes.node n4 = m.getNode(el.node4 - 1);
+            Element el = m.getElement(ind);
+            Node n1 = m.getNode(el.node1 - 1);
+            Node n2 = m.getNode(el.node2 - 1);
+            Node n3 = m.getNode(el.node3 - 1);
+            Node n4 = m.getNode(el.node4 - 1);
 
             a = n2.x - n1.x; b = n2.y - n1.y; c = n2.z - n1.z;
             d = n3.x - n1.x; e = n3.y - n1.y; f = n3.z - n1.z;
@@ -111,13 +111,13 @@ namespace MEF3D
             return (ai - a1) * (bj - b1) - (aj - a1) * (bi - b1);
         }
 
-        public void calculateLocalA(int i, Matrix A, Classes.mesh m)
+        public void calculateLocalA(int i, Matrix A, Mesh m)
         {
-            Classes.element e = m.getElement(i);
-            Classes.node n1 = m.getNode(e.node1 - 1);
-            Classes.node n2 = m.getNode(e.node2 - 1);
-            Classes.node n3 = m.getNode(e.node3 - 1);
-            Classes.node n4 = m.getNode(e.node4 - 1);
+            Element e = m.getElement(i);
+            Node n1 = m.getNode(e.node1 - 1);
+            Node n2 = m.getNode(e.node2 - 1);
+            Node n3 = m.getNode(e.node3 - 1);
+            Node n4 = m.getNode(e.node4 - 1);
 
             ArrayList arrayList = new ArrayList();
             arrayList.Add(1);
@@ -142,7 +142,7 @@ namespace MEF3D
             B[2][0] = -1; B[2][1] = 0; B[2][2] = 0; B[2][3] = 1;
         }
 
-        public Matrix createLocalK(int element, Classes.mesh m)
+        public Matrix createLocalK(int element, Mesh m)
         {
             // K = (k*Ve/D^2)Bt*At*A*B := K_4x4
             float D, Ve, k = m.getParameter((int)Classes.parameter.THERMAL_CONDUCTIVITY);
@@ -169,16 +169,16 @@ namespace MEF3D
             return K;
         }
 
-        public float calculateLocalJ(int ind, Classes.mesh m)
+        public float calculateLocalJ(int ind, Mesh m)
         {
             float J, a, b, c, d, e, f, g, h, i;
 
-            Classes.element el = m.getElement(ind);
+            Element el = m.getElement(ind);
 
-            Classes.node n1 = m.getNode(el.node1 - 1);
-            Classes.node n2 = m.getNode(el.node2 - 1);
-            Classes.node n3 = m.getNode(el.node3 - 1);
-            Classes.node n4 = m.getNode(el.node4 - 1);
+            Node n1 = m.getNode(el.node1 - 1);
+            Node n2 = m.getNode(el.node2 - 1);
+            Node n3 = m.getNode(el.node3 - 1);
+            Node n4 = m.getNode(el.node4 - 1);
 
             a = n2.x - n1.x; b = n3.x - n1.x; c = n4.x - n1.x;
             d = n3.y - n1.y; e = n3.y - n1.y; f = n4.y - n1.y;
@@ -191,7 +191,7 @@ namespace MEF3D
             return J;
         }
 
-        public Vector createLocalb(int element, Classes.mesh m)
+        public Vector createLocalb(int element, Mesh m)
         {
             Vector b = new Vector();
 
@@ -205,7 +205,7 @@ namespace MEF3D
             return b;
         }
 
-        public void crearSistemasLocales(Classes.mesh m, List<Matrix> localKs, List<Vector> localbs)
+        public void crearSistemasLocales(Mesh m, List<Matrix> localKs, List<Vector> localbs)
         {
             for (int i = 0; i < m.getSize((int)Classes.size.ELEMENTS); i++)
             {
@@ -214,7 +214,7 @@ namespace MEF3D
             }
         }
 
-        public void assemblyK(Classes.element e, Matrix localK, Matrix K)
+        public void assemblyK(Element e, Matrix localK, Matrix K)
         {
             int index1 = e.node1 - 1;
             int index2 = e.node2 - 1;
@@ -239,7 +239,7 @@ namespace MEF3D
             K[index4][index4] += localK[3][3];
         }
 
-        public void assemblyb(Classes.element e, Vector localb, Vector b)
+        public void assemblyb(Element e, Vector localb, Vector b)
         {
             int index1 = e.node1 - 1;
             int index2 = e.node2 - 1;
@@ -252,30 +252,30 @@ namespace MEF3D
             b[index4] += localb[3];
         }
 
-        public void ensamblaje(Classes.mesh m, List<Matrix> localKs, List<Vector> localbs, Matrix K, Vector b)
+        public void ensamblaje(Mesh m, List<Matrix> localKs, List<Vector> localbs, Matrix K, Vector b)
         {
             for (int i = 0; i < m.getSize((int)Classes.size.ELEMENTS); i++)
             {
-                Classes.element e = m.getElement(i);
+                Element e = m.getElement(i);
                 assemblyK(e, localKs.ElementAt(i), K);//Si tuesta, poner localKs[i]
                 assemblyb(e, localbs.ElementAt(i), b);
             }
         }
 
-        public void applyNeumann(Classes.mesh m, Vector b)
+        public void applyNeumann(Mesh m, Vector b)
         {
             for (int i = 0; i < m.getSize((int)Classes.size.NEUMANN); i++)
             {
-                Classes.condition c = m.getCondition(i, (int)Classes.size.NEUMANN);
+                Condition c = m.getCondition(i, (int)Classes.size.NEUMANN);
                 b[(c.node1 - 1)] += c.value;
             }
         }
 
-        public void applyDirichlet(Classes.mesh m, Matrix K, Vector b)
+        public void applyDirichlet(Mesh m, Matrix K, Vector b)
         {
             for (int i = 0; i < m.getSize((int)Classes.size.DIRICHLET); i++)
             {
-                Classes.condition c = m.getCondition(i, (int)Classes.size.DIRICHLET);
+                Condition c = m.getCondition(i, (int)Classes.size.DIRICHLET);
                 int index = c.node1 - 1;
 
                 K.RemoveAt(index);

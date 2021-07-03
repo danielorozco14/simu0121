@@ -8,7 +8,7 @@ namespace MEF3D
 {
     
 
-    public static class Classes
+    public class Classes
     {
         public enum indicator { NOTHING };
         public enum line { NOLINE, SINGLELINE, DOUBLELINE };
@@ -16,6 +16,7 @@ namespace MEF3D
         public enum parameter { THERMAL_CONDUCTIVITY, HEAT_SOURCE };
         public enum size { NODES, ELEMENTS, DIRICHLET, NEUMANN };
 
+        /*
         public class item
         {
             public int id { get; set; }
@@ -141,6 +142,6 @@ namespace MEF3D
 
         }
 
-
+        */
     }
 }

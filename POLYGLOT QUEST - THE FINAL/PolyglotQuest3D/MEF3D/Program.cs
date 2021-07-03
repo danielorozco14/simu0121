@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using MEF3D.Helpers;
 
 namespace MEF3D
 {
@@ -12,7 +13,7 @@ namespace MEF3D
     {
         static void Main(string[] args)
         {
-            string filename = args[1];
+            string filename = "3dtest.dat";
 
             List<Matrix> localKs = new List<Matrix>();
             List<Vector> localbs = new List<Vector>();
@@ -29,12 +30,12 @@ namespace MEF3D
                 + "\t- ELEMENTOS TETRAHEDROS\n"+
                 "*********************************************************************************\n\n");
 
-            Classes.mesh m = new Classes.mesh();
+            Mesh  m = new Mesh();
 
-            leerMallayCondiciones(m, filename);
+            Tools.leerMallayCondiciones(m, filename);
             Console.WriteLine("Datos obtenidos correctame");
 
-            crearSistemasLocales(m, localKs, localbs);
+            sel.crearSistemasLocales(m, localKs, localbs);
 
             Math_tools.zeroes(K, m.getSize((int)Classes.size.NODES));
             Math_tools.zeroes(b, m.getSize((int)Classes.size.NODES));
@@ -47,7 +48,7 @@ namespace MEF3D
             Math_tools.zeroes(T, b.Count);
             sel.calculate(K, b, T);
 
-            writeResults(m, T, filename);
+            Tools.writeResults(m, T, filename);
 
         }
     }
