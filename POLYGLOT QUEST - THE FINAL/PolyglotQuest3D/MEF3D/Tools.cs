@@ -22,6 +22,8 @@ namespace MEF3D
                 string[] resultLine;
 
                 sr.ReadLine();
+                sr.ReadLine();
+
                 if (nlines == (int)Classes.line.DOUBLELINE)
                     sr.ReadLine();
                 Item item = new Item();
@@ -32,7 +34,7 @@ namespace MEF3D
                         case ((int)Classes.mode.INT_FLOAT):
                             int e0; float r0;
                             line = sr.ReadLine();
-                            resultLine = line.Split(new Char[] { ' ', '\t' }, StringSplitOptions.RemoveEmptyEntries);
+                            resultLine = line.Split(new Char[] { ' '}, StringSplitOptions.RemoveEmptyEntries);
 
                             e0 = Convert.ToInt32(resultLine[0]);
                             r0 = (float)Convert.ToDouble(resultLine[1]);
@@ -47,7 +49,7 @@ namespace MEF3D
                         case ((int)Classes.mode.INT_FLOAT_FLOAT_FLOAT):
                             int e; float r, rr, rrr;
                             line = sr.ReadLine();
-                            resultLine = line.Split(new Char[] { ' ', '\t' }, StringSplitOptions.RemoveEmptyEntries);
+                            resultLine = line.Split(new Char[] { ' '}, StringSplitOptions.RemoveEmptyEntries);
                             //STREAM READER ESTA HAGARRANDO "COORDINATES" NO ESTA DANDO LOS SALTOS DE LINEA
                             e = Convert.ToInt32(resultLine[0]);//Por eso no puede convertir COORDINATES  a int
                             r = (float)Convert.ToDouble(resultLine[1]);
@@ -62,7 +64,7 @@ namespace MEF3D
                         case ((int)Classes.mode.INT_INT_INT_INT_INT):
                             int e1, e2, e3, e4, e5;
                             line = sr.ReadLine();
-                            resultLine = line.Split(new Char[] { ' ', '\t' }, StringSplitOptions.RemoveEmptyEntries);
+                            resultLine = line.Split(new Char[] { ' '}, StringSplitOptions.RemoveEmptyEntries);
 
                             e1 = Convert.ToInt32(resultLine[0]);
                             e2 = Convert.ToInt32(resultLine[1]);
@@ -115,12 +117,12 @@ namespace MEF3D
                 string[] result;
                 //addExtension(inputFileName, filename, ".dat");
 
-                result= sr.ReadLine().Split(new Char[] { ' ', '\t' }, StringSplitOptions.RemoveEmptyEntries);
-                Console.WriteLine("RESULT[1]= " + result[1]);
+                result= sr.ReadLine().Split(new Char[] { ' '}, StringSplitOptions.RemoveEmptyEntries);
+                
                 k = (float)Convert.ToDouble(result[0]);
                 Q = (float)Convert.ToDouble(result[1]);
 
-                result = sr.ReadLine().Split(new Char[] { ' ', '\t' }, StringSplitOptions.RemoveEmptyEntries);
+                result = sr.ReadLine().Split(new Char[] { ' ' }, StringSplitOptions.RemoveEmptyEntries);
                 
                 nnodes = Convert.ToInt32(result[0]);
                 neltos = Convert.ToInt32(result[1]);
