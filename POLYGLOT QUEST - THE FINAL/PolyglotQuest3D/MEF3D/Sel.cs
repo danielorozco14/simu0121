@@ -119,11 +119,6 @@ namespace MEF3D
             Node n3 = m.getNode(e.node3 - 1);
             Node n4 = m.getNode(e.node4 - 1);
 
-            ArrayList arrayList = new ArrayList();
-            arrayList.Add(1);
-            arrayList[0] = 5;
-
-
             A[0][0] = ab_ij(n3.y, n4.y, n1.y, n3.z, n4.z, n1.z);
             A[0][1] = ab_ij(n4.y, n2.y, n1.y, n4.z, n2.z, n1.z);
             A[0][2] = ab_ij(n2.y, n3.y, n1.y, n2.z, n3.z, n1.z);
@@ -163,8 +158,10 @@ namespace MEF3D
             Math_tools.transpose(B, Bt);
 
             Math_tools.productRealMatrix(k * Ve / (D * D),
-                Math_tools.productMatrixMatrix(Bt, Math_tools.productMatrixMatrix(At,Math_tools.productMatrixMatrix(A, B, 3, 3, 4), 3, 3, 4),
-                4, 3, 4), K);
+                Math_tools.productMatrixMatrix(Bt,
+                    Math_tools.productMatrixMatrix(At,  
+                        Math_tools.productMatrixMatrix(A, B, 3, 3, 4), 3, 3, 4),
+                             4, 3, 4), K);
 
             return K;
         }
@@ -181,8 +178,8 @@ namespace MEF3D
             Node n4 = m.getNode(el.node4 - 1);
 
             a = n2.x - n1.x; b = n3.x - n1.x; c = n4.x - n1.x;
-            d = n3.y - n1.y; e = n3.y - n1.y; f = n4.y - n1.y;
-            g = n4.z - n1.z; h = n3.z - n1.z; i = n4.z - n1.z;
+            d = n2.y - n1.y; e = n3.y - n1.y; f = n4.y - n1.y;
+            g = n2.z - n1.z; h = n3.z - n1.z; i = n4.z - n1.z;
 
             //Se calcula el determinante de esta matriz utilizando
             //la Regla de Sarrus.
@@ -225,14 +222,17 @@ namespace MEF3D
             K[index1][index2] += localK[0][1];
             K[index1][index3] += localK[0][2];
             K[index1][index4] += localK[0][3];
+
             K[index2][index1] += localK[1][0];
             K[index2][index2] += localK[1][1];
             K[index2][index3] += localK[1][2];
             K[index2][index4] += localK[1][3];
+            
             K[index3][index1] += localK[2][0];
             K[index3][index2] += localK[2][1];
             K[index3][index3] += localK[2][2];
             K[index3][index4] += localK[2][3];
+            
             K[index4][index1] += localK[3][0];
             K[index4][index2] += localK[3][1];
             K[index4][index3] += localK[3][2];
@@ -284,7 +284,7 @@ namespace MEF3D
                 for (int row = 0; row < K.Count; row++)
                 {
                     float cell = K.ElementAt(row).ElementAt(index);
-                    K.ElementAt(row).RemoveAt(index);
+                    K.ElementAt(row).RemoveAt(index); //Quizas los removes?
                     b[row] += -1 * c.value * cell;
                 }
             }

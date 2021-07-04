@@ -74,9 +74,6 @@ namespace MEF3D.Helpers
                 neumann_list[i] = neumann;
             }
 
-
-
-        
         }
         public Node[] getNodes()
         {

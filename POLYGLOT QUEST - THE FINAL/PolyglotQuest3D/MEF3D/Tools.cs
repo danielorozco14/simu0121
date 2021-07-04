@@ -26,7 +26,7 @@ namespace MEF3D
 
                 if (nlines == (int)Classes.line.DOUBLELINE)
                     sr.ReadLine();
-                Item item = new Item();
+                //Item item = new Item();
                 for (int i = 0; i < n; i++)
                 {
                     switch (mode)
@@ -37,13 +37,14 @@ namespace MEF3D
                             resultLine = line.Split(new Char[] { ' '}, StringSplitOptions.RemoveEmptyEntries);
 
                             e0 = Convert.ToInt32(resultLine[0]);
-                            r0 = (float)Convert.ToDouble(resultLine[1]);
+                            r0 = float.Parse(resultLine[1]);
                             
-                            item = items_list[i];
-                            item.setValues(0, 0, 0, 0, e0, 0, 0, 0, r0);
+                            //item = items_list[i];
+                            //item.setValues(0, 0, 0, 0, e0, 0, 0, 0, r0);
 
-                            //items_list[i].setValues(0, 0, 0, 0, e0, 0, 0, 0, r0);
-                            
+                            items_list[i].setValues(0, 0, 0, 0, e0, 0, 0, 0, r0);
+                           // System.Console.WriteLine("e0 :" + e0 + " r0 : " + r0);
+
                             break;
 
                         case ((int)Classes.mode.INT_FLOAT_FLOAT_FLOAT):
@@ -52,12 +53,14 @@ namespace MEF3D
                             resultLine = line.Split(new Char[] { ' '}, StringSplitOptions.RemoveEmptyEntries);
                             //STREAM READER ESTA HAGARRANDO "COORDINATES" NO ESTA DANDO LOS SALTOS DE LINEA
                             e = Convert.ToInt32(resultLine[0]);//Por eso no puede convertir COORDINATES  a int
-                            r = (float)Convert.ToDouble(resultLine[1]);
-                            rr = (float)Convert.ToDouble(resultLine[2]);
-                            rrr = (float)Convert.ToDouble(resultLine[3]);
+                            r = float.Parse(resultLine[1]);
+                            rr = float.Parse(resultLine[2]);
+                            rrr = float.Parse(resultLine[3]);
                             
-                            item = items_list[i];
-                            item.setValues(e, r, rr, rrr, 0, 0, 0, 0, 0);
+                            //item = items_list[i];
+                           // item.setValues(e, r, rr, rrr, 0, 0, 0, 0, 0);
+                            items_list[i].setValues(e, r, rr, rrr, 0, 0, 0, 0, 0);
+                          //  System.Console.WriteLine("e :" + e + " r : " + r + " rr : " + rr + " rrr : " + rrr);
 
                             break;
 
@@ -72,9 +75,12 @@ namespace MEF3D
                             e4 = Convert.ToInt32(resultLine[3]);
                             e5 = Convert.ToInt32(resultLine[4]);
 
-                            item = items_list[i];
+                            //item = items_list[i];
+                            //item.setValues(e1, 0, 0, 0, e2, e3, e4, e5, 0);
+                            
+                            items_list[i].setValues(e1, 0, 0, 0, e2, e3, e4, e5, 0);
+                           // System.Console.WriteLine("e1 :" + e1 + " e2 : " + e2 + " e3 : " + e3 + " e4: " + e4 + " e5: " + e5);
 
-                            item.setValues(e1, 0, 0, 0, e2, e3, e4, e5, 0);
 
                             break;
                     }
@@ -119,8 +125,8 @@ namespace MEF3D
 
                 result= sr.ReadLine().Split(new Char[] { ' '}, StringSplitOptions.RemoveEmptyEntries);
                 
-                k = (float)Convert.ToDouble(result[0]);
-                Q = (float)Convert.ToDouble(result[1]);
+                k = float.Parse(result[0]);
+                Q = float.Parse(result[1]);
 
                 result = sr.ReadLine().Split(new Char[] { ' ' }, StringSplitOptions.RemoveEmptyEntries);
                 
@@ -128,7 +134,7 @@ namespace MEF3D
                 neltos = Convert.ToInt32(result[1]);
                 ndirich = Convert.ToInt32(result[2]);
                 nneu = Convert.ToInt32(result[3]);
-                Console.WriteLine("NNodes " + nnodes + " Neltos:" + neltos);
+                
                 m.setParameters(k, Q);
                 m.setSizes(nnodes, neltos, ndirich, nneu);
                 m.createData();
@@ -138,7 +144,7 @@ namespace MEF3D
 
                 obtenerDatos(sr, (int)Classes.line.DOUBLELINE, ndirich, (int)Classes.mode.INT_FLOAT, m.getDirichlet());
                 obtenerDatos(sr, (int)Classes.line.DOUBLELINE, nneu, (int)Classes.mode.INT_FLOAT, m.getNeumann());
-
+               
                 sr.Close();
 
                 correctConditions(ndirich, m.getDirichlet(), m.getDirichletIndices());
@@ -167,7 +173,7 @@ namespace MEF3D
             {
                 StreamWriter streamWriter = new StreamWriter(filename + ".post.res");
                 streamWriter.WriteLine("GiD Post Results File 1.0\n");
-                streamWriter.WriteLine("Result \"Temperature\" \"Load Case 1\" 1 Scalar OnNodes\nComponentNames \"T\"\nValues\n");
+                streamWriter.WriteLine("Result \"Temperature\" \"Load Case 1\" 1 Scalar OnNodes\nComponentNames \"T\"\nValues");
 
                 int Tpos = 0;
                 int Dpos = 0;
@@ -179,18 +185,18 @@ namespace MEF3D
                 {
                     if (findIndex(i + 1, nd, dirich_indices))
                     {
-                        streamWriter.WriteLine(i + 1 + " " + dirich[Dpos].value + "\n");
+                        streamWriter.WriteLine(i + 1 + " " + dirich[Dpos].value);
                         
                         Dpos++;
                     }
                     else
                     {
-                        streamWriter.WriteLine(i + 1 + " " + T[(Tpos)] + "\n");
+                        streamWriter.WriteLine(i + 1 + " " + T[(Tpos)]);
                         Tpos++;
                     }
                 }
 
-                streamWriter.WriteLine("End Values\n");
+                streamWriter.WriteLine("End Values");
 
                 streamWriter.Close();
             }catch(Exception e)
