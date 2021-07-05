@@ -17,9 +17,16 @@ namespace MEF3D.Helpers
             public int node2 { get; set; }
             public int node3 { get; set; }
             public int node4 { get; set; }
+            public int node5 { get; set; }
+            public int node6 { get; set; }
+            public int node7 { get; set; }
+            public int node8 { get; set; }
+            public int node9 { get; set; }
+            public int node10 { get; set; }
             public float value { get; set; }
 
-            public virtual void setValues(int a, float b, float c, float d, int e, int f, int g, int h, float i) { }
+            public virtual void setValues(int a, float b, float c, float d, int e, int f, int g, int h,
+                int j, int k, int l, int m, int n, int o, float i) { }
         
     }
 }

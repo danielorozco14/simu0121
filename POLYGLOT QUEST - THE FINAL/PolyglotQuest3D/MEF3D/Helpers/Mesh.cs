@@ -9,7 +9,7 @@ namespace MEF3D.Helpers
     public class Mesh 
     {
         public float[] parameters = new float[2];
-        public int[] sizes = new int[4];
+        public int[] sizes = new int[4];//4
         public int[] indices_dirich;
 
         public Node[] node_list;

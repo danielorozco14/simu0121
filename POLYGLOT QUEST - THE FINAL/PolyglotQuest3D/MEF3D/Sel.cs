@@ -58,112 +58,342 @@ namespace MEF3D
             }
         }
 
-        public float calculateLocalD(int ind, Mesh m)
+        public Matrix createLocalK(int id, Mesh m)//id = element
         {
-            float D, a, b, c, d, e, f, g, h, i;
+            
+            Matrix localK = new Matrix();
+            float EI = 88f; //VALOR QUEMADO PORQUE ES EL RANDOMIZADO
+            float Jacobian = calculateLocalJ(id, m);
 
-            Element el = m.getElement(ind);
+            ////
+            float A = calculateElement_A(id, m);
+            float B = calculateElement_B(id, m);
+            float C = calculateElement_C(id, m);
+            float D = calculateElement_D(id, m);
+            float E = calculateElement_E(id, m);
+            float F = calculateElement_F(id, m);
+            float G = calculateElement_G(id, m);
+            float H = calculateElement_H(id, m);
+            float I = calculateElement_I(id, m);
+            float J = calculateElement_J(id, m);
+            float K = calculateElement_K(id, m);
+
+            Math_tools.zeroes(localK, 30);
+
+
+            //SI TRUENA, ES PORQUE SE DURMIERON Y ME DICTARON MAL MATRIZ MIU
+            //COPY 1
+            localK[0][0] = (EI * Jacobian) * A;
+            localK[0][1] = (EI * Jacobian) * E;
+            localK[0][4] = (EI * Jacobian) * -E;
+            localK[0][6] = (EI * Jacobian) * -F;
+            localK[0][7] = (EI * Jacobian) * G;
+            localK[0][8] = (EI * Jacobian) * F;
+            localK[0][9] = (EI * Jacobian) * F;
+
+            localK[1][0] = (EI * Jacobian) * E;
+            localK[1][1] = (EI * Jacobian) * B;
+            localK[1][4] = (EI * Jacobian) * -H;
+            localK[1][6] = (EI * Jacobian) * -H;
+            localK[1][7] = (EI * Jacobian) * I;
+            localK[1][8] = (EI * Jacobian) * H;
+            localK[1][9] = (EI * Jacobian) * H;
+
+            localK[4][0] = (EI * Jacobian) * -F;
+            localK[4][1] = (EI * Jacobian) * -H;
+            localK[4][4] = (EI * Jacobian) * C;
+            localK[4][6] = (EI * Jacobian) * J;
+            localK[4][7] = (EI * Jacobian) * -K;
+            localK[4][8] = (EI * Jacobian) * -C;
+            localK[4][9] = (EI * Jacobian) * -J;
+
+            localK[6][0] = (EI * Jacobian) * -F;
+            localK[6][1] = (EI * Jacobian) * -H;
+            localK[6][4] = (EI * Jacobian) * J;
+            localK[6][6] = (EI * Jacobian) * C;
+            localK[6][7] = (EI * Jacobian) * -K;
+            localK[6][8] = (EI * Jacobian) * -J;
+            localK[6][9] = (EI * Jacobian) * -C;
+
+            localK[7][0] = (EI * Jacobian) * G;
+            localK[7][1] = (EI * Jacobian) * I;
+            localK[7][4] = (EI * Jacobian) * -K;
+            localK[7][6] = (EI * Jacobian) * -K;
+            localK[7][7] = (EI * Jacobian) * D;
+            localK[7][8] = (EI * Jacobian) * K;
+            localK[7][9] = (EI * Jacobian) * K;
+
+            localK[8][0] = (EI * Jacobian) * F;
+            localK[8][1] = (EI * Jacobian) * H;
+            localK[8][4] = (EI * Jacobian) * -C;
+            localK[8][6] = (EI * Jacobian) * -J;
+            localK[8][7] = (EI * Jacobian) * K;
+            localK[8][8] = (EI * Jacobian) * C;
+            localK[8][9] = (EI * Jacobian) * J;
+
+            localK[9][0] = (EI * Jacobian) * F;
+            localK[9][1] = (EI * Jacobian) * H;
+            localK[9][4] = (EI * Jacobian) * -J;
+            localK[9][6] = (EI * Jacobian) * -C;
+            localK[9][7] = (EI * Jacobian) * K;
+            localK[9][8] = (EI * Jacobian) * J;
+            localK[9][9] = (EI * Jacobian) * C;
+
+            //COPY 2
+            localK[10][10] = (EI * Jacobian) * A;
+            localK[10][11] = (EI * Jacobian) * E;
+            localK[10][14] = (EI * Jacobian) * -E;
+            localK[10][16] = (EI * Jacobian) * -F;
+            localK[10][17] = (EI * Jacobian) * G;
+            localK[10][18] = (EI * Jacobian) * F;
+            localK[10][19] = (EI * Jacobian) * F;
+
+            localK[11][10] = (EI * Jacobian) * E;
+            localK[11][11] = (EI * Jacobian) * B;
+            localK[11][14] = (EI * Jacobian) * -H;
+            localK[11][16] = (EI * Jacobian) * -H;
+            localK[11][17] = (EI * Jacobian) * I;
+            localK[11][18] = (EI * Jacobian) * H;
+            localK[11][19] = (EI * Jacobian) * H;
+
+            localK[14][10] = (EI * Jacobian) * -F;
+            localK[14][11] = (EI * Jacobian) * -H;
+            localK[14][14] = (EI * Jacobian) * C;
+            localK[14][16] = (EI * Jacobian) * J;
+            localK[14][17] = (EI * Jacobian) * -K;
+            localK[14][18] = (EI * Jacobian) * -C;
+            localK[14][19] = (EI * Jacobian) * -J;
+
+            localK[16][10] = (EI * Jacobian) * -F;
+            localK[16][11] = (EI * Jacobian) * -H;
+            localK[16][14] = (EI * Jacobian) * J;
+            localK[16][16] = (EI * Jacobian) * C;
+            localK[16][17] = (EI * Jacobian) * -K;
+            localK[16][18] = (EI * Jacobian) * -J;
+            localK[16][19] = (EI * Jacobian) * -C;
+
+            localK[17][10] = (EI * Jacobian) * G;
+            localK[17][11] = (EI * Jacobian) * I;
+            localK[17][14] = (EI * Jacobian) * -K;
+            localK[17][16] = (EI * Jacobian) * -K;
+            localK[17][17] = (EI * Jacobian) * D;
+            localK[17][18] = (EI * Jacobian) * K;
+            localK[17][19] = (EI * Jacobian) * K;
+
+            localK[18][10] = (EI * Jacobian) * F;
+            localK[18][11] = (EI * Jacobian) * H;
+            localK[18][14] = (EI * Jacobian) * -C;
+            localK[18][16] = (EI * Jacobian) * -J;
+            localK[18][17] = (EI * Jacobian) * K;
+            localK[18][18] = (EI * Jacobian) * C;
+            localK[18][19] = (EI * Jacobian) * J;
+
+            localK[19][10] = (EI * Jacobian) * F;
+            localK[19][11] = (EI * Jacobian) * H;
+            localK[19][14] = (EI * Jacobian) * -J;
+            localK[19][16] = (EI * Jacobian) * -C;
+            localK[19][17] = (EI * Jacobian) * K;
+            localK[19][18] = (EI * Jacobian) * J;
+            localK[19][19] = (EI * Jacobian) * C;
+
+            //COPY 3
+
+            localK[20][20] = (EI * Jacobian) * A;
+            localK[20][21] = (EI * Jacobian) * E;
+            localK[20][24] = (EI * Jacobian) * -E;
+            localK[20][26] = (EI * Jacobian) * -F;
+            localK[20][27] = (EI * Jacobian) * G;
+            localK[20][28] = (EI * Jacobian) * F;
+            localK[20][29] = (EI * Jacobian) * F;
+
+            localK[21][20] = (EI * Jacobian) * E;
+            localK[21][21] = (EI * Jacobian) * B;
+            localK[21][24] = (EI * Jacobian) * -H;
+            localK[21][26] = (EI * Jacobian) * -H;
+            localK[21][27] = (EI * Jacobian) * I;
+            localK[21][28] = (EI * Jacobian) * H;
+            localK[21][29] = (EI * Jacobian) * H;
+
+            localK[24][20] = (EI * Jacobian) * -F;
+            localK[24][21] = (EI * Jacobian) * -H;
+            localK[24][24] = (EI * Jacobian) * C;
+            localK[24][26] = (EI * Jacobian) * J;
+            localK[24][27] = (EI * Jacobian) * -K;
+            localK[24][28] = (EI * Jacobian) * -C;
+            localK[24][29] = (EI * Jacobian) * -J;
+
+            localK[26][20] = (EI * Jacobian) * -F;
+            localK[26][21] = (EI * Jacobian) * -H;
+            localK[26][24] = (EI * Jacobian) * J;
+            localK[26][26] = (EI * Jacobian) * C;
+            localK[26][27] = (EI * Jacobian) * -K;
+            localK[26][28] = (EI * Jacobian) * -J;
+            localK[26][29] = (EI * Jacobian) * -C;
+
+            localK[27][20] = (EI * Jacobian) * G;
+            localK[27][21] = (EI * Jacobian) * I;
+            localK[27][24] = (EI * Jacobian) * -K;
+            localK[27][26] = (EI * Jacobian) * -K;
+            localK[27][27] = (EI * Jacobian) * D;
+            localK[27][28] = (EI * Jacobian) * K;
+            localK[27][29] = (EI * Jacobian) * K;
+
+            localK[28][20] = (EI * Jacobian) * F;
+            localK[28][21] = (EI * Jacobian) * H;
+            localK[28][24] = (EI * Jacobian) * -C;
+            localK[28][26] = (EI * Jacobian) * -J;
+            localK[28][27] = (EI * Jacobian) * K;
+            localK[28][28] = (EI * Jacobian) * C;
+            localK[28][29] = (EI * Jacobian) * J;
+
+            localK[29][20] = (EI * Jacobian) * F;
+            localK[29][21] = (EI * Jacobian) * H;
+            localK[29][24] = (EI * Jacobian) * -J;
+            localK[29][26] = (EI * Jacobian) * -C;
+            localK[29][27] = (EI * Jacobian) * K;
+            localK[29][28] = (EI * Jacobian) * J;
+            localK[29][29] = (EI * Jacobian) * C;
+
+
+            showMatrix(localK);
+            Console.ReadKey();
+            return localK;
+        }
+
+        public float calculateLocalC1(int id, Mesh m)
+        {
+            Element el = m.getElement(id);
+            float result = 0.0f;
+
+            Node n1 = m.getNode(el.node1 - 1);
+           
+            Node n2 = m.getNode(el.node2 - 1);
+
+            if (n1.x == n2.x)
+                return (float)Math.Pow(10, -6);
+            
+
+            result = (float)(1 / Math.Pow((n2.x - n1.x), 2));
+
+
+            return result;
+        }
+
+        
+
+        public float calculateLocalC2(int id, Mesh m)
+        {
+            Element el = m.getElement(id);
+            float result = 0.0f;
 
             Node n1 = m.getNode(el.node1 - 1);
             Node n2 = m.getNode(el.node2 - 1);
-            Node n3 = m.getNode(el.node3 - 1);
-            Node n4 = m.getNode(el.node4 - 1);
+            Node n8 = m.getNode(el.node8 - 1);
 
-            a = n2.x - n1.x; b = n2.y - n1.y; c = n2.z - n1.z;
-            d = n3.x - n1.x; e = n3.y - n1.y; f = n3.z - n1.z;
-            g = n4.x - n1.x; h = n4.y - n1.y; i = n4.z - n1.z;
-            //Se calcula el determinante de esta matriz utilizando
-            //la Regla de Sarrus.
-            D = a * e * i + d * h * c + g * b * f - g * e * c - a * h * f - d * b * i;
+            if (n1.x == n2.x)
+                return (float)Math.Pow(10, -6);
 
-            return D;
+            result = (float)(1 /((n2.x - n1.x))) * (4 * n1.x + 4 * n2.x - 8 * n8.x);
+
+            return result;
+
         }
 
-        public float calculateLocalVolume(int ind, Mesh m)
+
+        public float calculateElement_K(int id, Mesh m)
         {
-            //Se utiliza la siguiente fórmula:
-            //      Dados los 4 puntos vértices del tetrahedro A, B, C, D.
-            //      Nos anclamos en A y calculamos los 3 vectores:
-            //              V1 = B - A
-            //              V2 = C - A
-            //              V3 = D - A
-            //      Luego el volumen es:
-            //              V = (1/6)*det(  [ V1' ; V2' ; V3' ]  )
-
-            float V, a, b, c, d, e, f, g, h, i;
-            Element el = m.getElement(ind);
-            Node n1 = m.getNode(el.node1 - 1);
-            Node n2 = m.getNode(el.node2 - 1);
-            Node n3 = m.getNode(el.node3 - 1);
-            Node n4 = m.getNode(el.node4 - 1);
-
-            a = n2.x - n1.x; b = n2.y - n1.y; c = n2.z - n1.z;
-            d = n3.x - n1.x; e = n3.y - n1.y; f = n3.z - n1.z;
-            g = n4.x - n1.x; h = n4.y - n1.y; i = n4.z - n1.z;
-            //Para el determinante se usa la Regla de Sarrus.
-            V = (1.0f / 6.0f) * (a * e * i + d * h * c + g * b * f - g * e * c - a * h * f - d * b * i);
-
-            return V;
+            return (-4 / 3) * calculateLocalC1(id, m) * calculateLocalC2(id, m);
         }
 
-        public float ab_ij(float ai, float aj, float a1, float bi, float bj, float b1)
+
+        public float calculateElement_J(int id, Mesh m)
         {
-            return (ai - a1) * (bj - b1) - (aj - a1) * (bi - b1);
+            return (2 / 15) * (float)Math.Pow( calculateLocalC2(id, m), 2);
         }
 
-        public void calculateLocalA(int i, Matrix A, Mesh m)
-        {
-            Element e = m.getElement(i);
-            Node n1 = m.getNode(e.node1 - 1);
-            Node n2 = m.getNode(e.node2 - 1);
-            Node n3 = m.getNode(e.node3 - 1);
-            Node n4 = m.getNode(e.node4 - 1);
 
-            A[0][0] = ab_ij(n3.y, n4.y, n1.y, n3.z, n4.z, n1.z);
-            A[0][1] = ab_ij(n4.y, n2.y, n1.y, n4.z, n2.z, n1.z);
-            A[0][2] = ab_ij(n2.y, n3.y, n1.y, n2.z, n3.z, n1.z);
-            A[1][0] = ab_ij(n4.x, n3.x, n1.x, n4.z, n3.z, n1.z);
-            A[1][1] = ab_ij(n2.x, n4.x, n1.x, n2.z, n4.z, n1.z);
-            A[1][2] = ab_ij(n3.x, n2.x, n1.x, n3.z, n2.z, n1.z);
-            A[2][0] = ab_ij(n3.x, n4.x, n1.x, n3.y, n4.y, n1.y);
-            A[2][1] = ab_ij(n4.x, n2.x, n1.x, n4.y, n2.y, n1.y);
-            A[2][2] = ab_ij(n2.x, n3.x, n1.x, n2.y, n3.y, n1.y);
+        public float calculateElement_I(int id, Mesh m)
+        {
+            return ((-16 / 3) * (float)Math.Pow(calculateLocalC1(id, m), 2)) - ((2 / 3) * (float)Math.Pow(calculateLocalC2(id, m), 2));
         }
 
-        public void calculateB(Matrix B)
+        public float calculateElement_H(int id, Mesh m)
         {
-            B[0][0] = -1; B[0][1] = 1; B[0][2] = 0; B[0][3] = 0;
-            B[1][0] = -1; B[1][1] = 0; B[1][2] = 1; B[1][3] = 0;
-            B[2][0] = -1; B[2][1] = 0; B[2][2] = 0; B[2][3] = 1;
+            float c1 = calculateLocalC1(id, m);
+            float c2 = calculateLocalC2(id, m);
+
+            return (2 / 3 * c1 * c2) + (1 / 30 * (float)Math.Pow(c2, 2));
         }
 
-        public Matrix createLocalK(int element, Mesh m)
+        public float calculateElement_G(int id, Mesh m)
         {
-            // K = (k*Ve/D^2)Bt*At*A*B := K_4x4
-            float D, Ve, k = m.getParameter((int)Classes.parameter.THERMAL_CONDUCTIVITY);
-            Matrix K = new Matrix();
-            Matrix A = new Matrix();
-            Matrix B = new Matrix();
-            Matrix Bt = new Matrix();
-            Matrix At = new Matrix();
+            float c1 = calculateLocalC1(id, m);
+            float c2 = calculateLocalC2(id, m);
 
-            D = calculateLocalD(element, m);
-            Ve = calculateLocalVolume(element, m);
+            return (-16 / 3 * (float)Math.Pow(c1, 2)) - (4 / 3 * c1 * c2) - (2/15 * (float)Math.Pow(c2,2));
+        }
 
-            Math_tools.zeroes(A, 3);
-            Math_tools.zeroes(B, 3, 4);
-            calculateLocalA(element, A, m);
-            calculateB(B);
-            Math_tools.transpose(A, At);
-            Math_tools.transpose(B, Bt);
+        public float calculateElement_F(int id, Mesh m)
+        {
+            float c1 = calculateLocalC1(id, m);
+            float c2 = calculateLocalC2(id, m);
 
-            Math_tools.productRealMatrix(k * Ve / (D * D),
-                Math_tools.productMatrixMatrix(Bt,
-                    Math_tools.productMatrixMatrix(At,  
-                        Math_tools.productMatrixMatrix(A, B, 3, 3, 4), 3, 3, 4),
-                             4, 3, 4), K);
+            return (2 / 3 * c1 * c2) - (1/30 * (float)Math.Pow(c2, 2));
+        }
 
-            return K;
+        public float calculateElement_E(int id, Mesh m)
+        {
+            float c1 = calculateLocalC1(id, m);
+            float c2 = calculateLocalC2(id, m);
+
+            return (8 / 3 *(float)Math.Pow(c1, 2)) + (1 / 30 * (float)Math.Pow(c2, 2));
+        }
+
+        public float calculateElement_D(int id, Mesh m)
+        {
+            float c1 = calculateLocalC1(id, m);
+            float c2 = calculateLocalC2(id, m);
+
+            return (1 / (192 * (float)Math.Pow(4 * c2, 2))) * (float)Math.Pow((4 * c2 - c1), 4)
+                - (1 / (3840 * (float)Math.Pow(c2, 3))) * (float)Math.Pow((4 * c2 - c1), 5)
+                + (1 / (7680 * (float)Math.Pow(c2, 3))) * (float)Math.Pow((4 * c2 + 8 * c1), 5)
+                - (7 / (7680 * (float)Math.Pow(c2, 3))) * (float)Math.Pow((4 * c2 + 8 * c1), 5)
+                + (1 / ( 768 * (float)Math.Pow(c2, 3))) * (float)Math.Pow((-8 * c1), 5)
+                - (c1 / ( 96  * (float)Math.Pow(c2, 3))) * (float)Math.Pow((4 * c2 - 8 * c1), 4)
+                + (2 * c1 - 1 / (192 * (float)Math.Pow(c2, 3))) * (float)Math.Pow((-8 * c1), 4)
+                ;
+        }
+
+
+        public float calculateElement_C(int id, Mesh m)
+        {
+            float c2 = calculateLocalC2(id, m);
+            return (4 / 15 * (float) Math.Pow(c2, 2));
+        }
+
+        public float calculateElement_B(int id, Mesh m)
+        {
+            float c1 = calculateLocalC1(id, m);
+            float c2 = calculateLocalC2(id, m);
+
+
+            return (-1 / (192 * (float)Math.Pow(c2, 2)) * (float)Math.Pow((4 * c1 + c2),4) 
+                + (1 / (24 * c2)    )                   * (float)Math.Pow((4 * c1 + c2), 3))
+                + (1 / (3840 * (float)Math.Pow(c2, 3))  * (float)Math.Pow((4 * c1 + c2), 5)
+                - (1 / (3840 * (float)Math.Pow(c2, 3))  * (float)Math.Pow((4 * c1 - 3 * c2), 5)
+                ));
+        }
+
+        public float calculateElement_A(int id, Mesh m)
+        {
+            float c1 = calculateLocalC1(id, m);
+            float c2 = calculateLocalC2(id, m);
+
+            return (-1 / (192 * (float)Math.Pow(c2, 2)) * (float)Math.Pow((4 * c1 - c2), 4) 
+                 - (1 / (24 * c2))                      * (float)Math.Pow((4 * c1 - c2), 3))
+                 - (1 / (3840 * (float)Math.Pow(c2, 3)) * (float)Math.Pow((4 * c1 - c2), 5))
+                 + (1 / (3840 * (float)Math.Pow(c2, 3)) * (float)Math.Pow((4 * c1 + 3*c2), 5))
+                ;
         }
 
         public float calculateLocalJ(int ind, Mesh m)
@@ -192,12 +422,42 @@ namespace MEF3D
         {
             Vector b = new Vector();
 
-            float Q = m.getParameter((int)Classes.parameter.HEAT_SOURCE), J, b_i;
-            J = calculateLocalJ(element, m);
+            float J = calculateLocalJ(element, m);
+            
+            Math_tools.zeroes(b, 30);
+            
+            //FALTA MODIFICAR, HAY QUE OBTENER LOS VALORES DESDE EL ARCHIVO PARA HACER ESTO
 
-            b_i = Q * J / 24.0f;
-            b.Add(b_i); b.Add(b_i);
-            b.Add(b_i); b.Add(b_i);
+            b[0] = (J / 120) * 3540;
+            b[1] = (J / 120) * -60;
+            b[2] = (J / 120) * -60;
+            b[3] = (J / 120) * -60;
+            b[4] = (J / 120) * 240;
+            b[5] = (J / 120) * 240;
+            b[6] = (J / 120) * 240;
+            b[7] = (J / 120) * 240;
+            b[8] = (J / 120) * 240;
+            b[9] = (J / 120) * 240;
+            b[10] = (J / 120) * 177;
+            b[11] = (J / 120) * -3;
+            b[12] = (J / 120) * -3;
+            b[13] = (J / 120) * -3;
+            b[14] = (J / 120) * 12;
+            b[15] = (J / 120) * 12;
+            b[16] = (J / 120) * 12;
+            b[17] = (J / 120) * 12;
+            b[18] = (J / 120) * 12;
+            b[19] = (J / 120) * 12;
+            b[20] = (J / 120) * -1711;
+            b[21] = (J / 120) * 29;
+            b[22] = (J / 120) * 29;
+            b[23] = (J / 120) * 29;
+            b[24] = (J / 120) * -116;
+            b[25] = (J / 120) * -116;
+            b[26] = (J / 120) * -116;
+            b[27] = (J / 120) * -116;
+            b[28] = (J / 120) * -116;
+            b[29] = (J / 120) * -116;
 
             return b;
         }
@@ -213,45 +473,165 @@ namespace MEF3D
 
         public void assemblyK(Element e, Matrix localK, Matrix K)
         {
-            int index1 = e.node1 - 1;
+            int nnodes = K.Count / 3;
+            
+            int index1 = e.node1 - 1; //21
             int index2 = e.node2 - 1;
             int index3 = e.node3 - 1;
             int index4 = e.node4 - 1;
+            int index5 = e.node5 - 1;
+            int index6 = e.node6 - 1;
+            int index7 = e.node7 - 1;
+            int index8 = e.node8 - 1;
+            int index9 = e.node9 - 1;
+            int index10 = e.node10 - 1;
 
-            K[index1][index1] += localK[0][0];
-            K[index1][index2] += localK[0][1];
-            K[index1][index3] += localK[0][2];
-            K[index1][index4] += localK[0][3];
+            //List<int> indexes = new List<int>();
+            //indexes.Add(index1); //0
+            //indexes.Add(index2);
+            //indexes.Add(index3);
+            //indexes.Add(index4);
+            //indexes.Add(index5);
+            //indexes.Add(index6);
+            //indexes.Add(index7);
+            //indexes.Add(index8);
+            //indexes.Add(index9);
+            //indexes.Add(index10);//9
 
-            K[index2][index1] += localK[1][0];
-            K[index2][index2] += localK[1][1];
-            K[index2][index3] += localK[1][2];
-            K[index2][index4] += localK[1][3];
-            
-            K[index3][index1] += localK[2][0];
-            K[index3][index2] += localK[2][1];
-            K[index3][index3] += localK[2][2];
-            K[index3][index4] += localK[2][3];
-            
-            K[index4][index1] += localK[3][0];
-            K[index4][index2] += localK[3][1];
-            K[index4][index3] += localK[3][2];
-            K[index4][index4] += localK[3][3];
+            ////SI TRUENA ES POR LOS INDICES
+            //for (int i = 10, j =0; i < 20; i++, j++)
+            //{
+            //    indexes.Add(10 + indexes[j]);
+            //}
+            //for (int i = 20, j=0; i < 30; i++, j++)
+            //{
+            //    indexes.Add(20 + indexes[j]);
+            //}
+
+
+            //for(int i = 0; i < 30; i++)
+            //{
+            //    for(int j = 0; j < 30; j++)
+            //    {
+            //        K[indexes[i]][indexes[j]] += localK[i][j];
+            //    }
+            //}
+
+            int[] indexs = new int[30];
+            indexs[0] = index1;
+            indexs[1] = index2;
+            indexs[2] = index3;
+            indexs[3] = index4;
+            indexs[4] = index5;
+            indexs[5] = index6;
+            indexs[6] = index7;
+            indexs[7] = index8;
+            indexs[8] = index9;
+            indexs[9] = index10;
+            indexs[10] = index1 + 10;
+            indexs[11] = index2 + 10;
+            indexs[12] = index3+10;
+            indexs[13] = index4+10;
+            indexs[14] = index5+10;
+            indexs[15] = index6+10;
+            indexs[16] = index7+10;
+            indexs[17] = index8+10;
+            indexs[18] = index9+10;
+            indexs[19] = index10+10;
+            indexs[20] = index1+20;
+            indexs[21] = index2+20;
+            indexs[22] = index3+20;
+            indexs[23] = index4+20;
+            indexs[24] = index5+20;
+            indexs[25] = index6+20;
+            indexs[26] = index7+20;
+            indexs[27] = index8+20;
+            indexs[28] = index9+20;
+            indexs[29] = index10+20;
+
+
+            //for (int i = 10; i < 20; i++)
+            //{
+            //    indexs[i] = indexs[i - 10] + nnodes;
+            //}
+            //for (int i = 20; i < 30; i++)
+            //{
+            //    indexs[i] = indexs[i - 20] + 2 * nnodes;
+            //}
+
+            foreach(int i in indexs)
+                Console.WriteLine(i);
+
+            for (int i = 0; i < 30; i++)
+            {
+                for (int j = 0; j < 30; j++)
+                {
+                    int krow = indexs[i];
+                    int kcol = indexs[j];
+                    K[krow][kcol] += localK[i][j];
+
+                }
+
+            }
+
+
+
         }
 
         public void assemblyb(Element e, Vector localb, Vector b)
         {
+
+            //MOCHADO
+        
+            int nodos = 10;
             int index1 = e.node1 - 1;
             int index2 = e.node2 - 1;
             int index3 = e.node3 - 1;
             int index4 = e.node4 - 1;
+            int index5 = e.node5 - 1;
+            int index6 = e.node6 - 1;
+            int index7 = e.node7 - 1;
+            int index8 = e.node8 - 1;
+            int index9 = e.node9 - 1;
+            int index10 = e.node10 - 1;
 
             b[index1] += localb[0];
             b[index2] += localb[1];
             b[index3] += localb[2];
             b[index4] += localb[3];
+            b[index5] += localb[4];
+            b[index6] += localb[5];
+            b[index7] += localb[6];
+            b[index8] += localb[7];
+            b[index9] += localb[8];
+            b[index10] += localb[9];
+
+            b[index1 + nodos] += localb[10];
+            b[index2 + nodos] += localb[11];
+            b[index3 + nodos] += localb[12];
+            b[index4 + nodos] += localb[13];
+            b[index5 + nodos] += localb[14];
+            b[index6 + nodos] += localb[15];
+            b[index7 + nodos] += localb[16];
+            b[index8 + nodos] += localb[17];
+            b[index9 + nodos] += localb[18];
+            b[index10 + nodos] += localb[19];
+
+            b[index1 +   (nodos*2)] += localb[20];
+            b[index2 +   (nodos*2)] += localb[21];
+            b[index3 +   (nodos*2)] += localb[22];
+            b[index4 +   (nodos*2)] += localb[23];
+            b[index5 +   (nodos*2)] += localb[24];
+            b[index6 +   (nodos*2)] += localb[25];
+            b[index7 +   (nodos*2)] += localb[26];
+            b[index8 +   (nodos*2)] += localb[27];
+            b[index9 +   (nodos*2)] += localb[28];
+            b[index10 +  (nodos*2)] += localb[29];
+
+
         }
 
+        //ENSAMBLAJE DE K * T = b
         public void ensamblaje(Mesh m, List<Matrix> localKs, List<Vector> localbs, Matrix K, Vector b)
         {
             for (int i = 0; i < m.getSize((int)Classes.size.ELEMENTS); i++)
@@ -284,7 +664,7 @@ namespace MEF3D
                 for (int row = 0; row < K.Count; row++)
                 {
                     float cell = K.ElementAt(row).ElementAt(index);
-                    K.ElementAt(row).RemoveAt(index); //Quizas los removes?
+                    K.ElementAt(row).RemoveAt(index);
                     b[row] += -1 * c.value * cell;
                 }
             }
@@ -296,10 +676,10 @@ namespace MEF3D
             Matrix Kinv = new Matrix();
 
             Console.WriteLine("Calculo de inversa...");
-            Math_tools.inverseMatrix(K, Kinv);//TODO 
+            Math_tools.inverseMatrix(K, Kinv); 
 
             Console.WriteLine("Calculo de respuesta...");
-            Math_tools.productMatrixVector(Kinv, b, T);//TODO
+            Math_tools.productMatrixVector(Kinv, b, T);
         }
     }
 }

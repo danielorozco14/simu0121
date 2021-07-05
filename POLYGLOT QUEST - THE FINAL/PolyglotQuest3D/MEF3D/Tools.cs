@@ -41,46 +41,44 @@ namespace MEF3D
                             
                             //item = items_list[i];
                             //item.setValues(0, 0, 0, 0, e0, 0, 0, 0, r0);
-
-                            items_list[i].setValues(0, 0, 0, 0, e0, 0, 0, 0, r0);
+                            //CHANGE POSITION OF ARGUMENTS
+                            items_list[i].setValues(0, 0, 0, 0, e0, 0, 0, 0, 0, 0, 0, 0, 0, 0, r0);
                            // System.Console.WriteLine("e0 :" + e0 + " r0 : " + r0);
 
                             break;
 
-                        case ((int)Classes.mode.INT_FLOAT_FLOAT_FLOAT):
+                        case ((int)Classes.mode.INT_FLOAT_FLOAT_FLOAT)://THIS ONE READS COORDINATES
                             int e; float r, rr, rrr;
                             line = sr.ReadLine();
-                            resultLine = line.Split(new Char[] { ' '}, StringSplitOptions.RemoveEmptyEntries);
-                            //STREAM READER ESTA HAGARRANDO "COORDINATES" NO ESTA DANDO LOS SALTOS DE LINEA
-                            e = Convert.ToInt32(resultLine[0]);//Por eso no puede convertir COORDINATES  a int
+                            resultLine = line.Split(new Char[] {' '}, StringSplitOptions.RemoveEmptyEntries);
+                            
+                            e = Convert.ToInt32(resultLine[0]);
                             r = float.Parse(resultLine[1]);
                             rr = float.Parse(resultLine[2]);
                             rrr = float.Parse(resultLine[3]);
-                            
-                            //item = items_list[i];
-                           // item.setValues(e, r, rr, rrr, 0, 0, 0, 0, 0);
-                            items_list[i].setValues(e, r, rr, rrr, 0, 0, 0, 0, 0);
-                          //  System.Console.WriteLine("e :" + e + " r : " + r + " rr : " + rr + " rrr : " + rrr);
+                         
+                            items_list[i].setValues(e, r, rr, rrr, 0, 0, 0, 0,0,0,0,0,0,0, 0);
 
                             break;
-
-                        case ((int)Classes.mode.INT_INT_INT_INT_INT):
-                            int e1, e2, e3, e4, e5;
+                           
+                        case ((int)Classes.mode.INT_INT_INT_INT_INT)://THIS ONE READS ELEMENTS
+                            int e1, e2, e3, e4, e5, e6, e7, e8, e9 , e10, e11;
                             line = sr.ReadLine();
                             resultLine = line.Split(new Char[] { ' '}, StringSplitOptions.RemoveEmptyEntries);
 
-                            e1 = Convert.ToInt32(resultLine[0]);
+                            e1 = Convert.ToInt32(resultLine[0]);//ID
                             e2 = Convert.ToInt32(resultLine[1]);
                             e3 = Convert.ToInt32(resultLine[2]);
                             e4 = Convert.ToInt32(resultLine[3]);
                             e5 = Convert.ToInt32(resultLine[4]);
-
-                            //item = items_list[i];
-                            //item.setValues(e1, 0, 0, 0, e2, e3, e4, e5, 0);
+                            e6 = Convert.ToInt32(resultLine[5]);
+                            e7 = Convert.ToInt32(resultLine[6]);
+                            e8 = Convert.ToInt32(resultLine[7]);
+                            e9 = Convert.ToInt32(resultLine[8]);
+                            e10 = Convert.ToInt32(resultLine[9]);
+                            e11 = Convert.ToInt32(resultLine[10]);
                             
-                            items_list[i].setValues(e1, 0, 0, 0, e2, e3, e4, e5, 0);
-                           // System.Console.WriteLine("e1 :" + e1 + " e2 : " + e2 + " e3 : " + e3 + " e4: " + e4 + " e5: " + e5);
-
+                            items_list[i].setValues(e1, 0, 0, 0, e2, e3, e4, e5, e6, e7, e8, e9, e10, e11, 0);
 
                             break;
                     }
@@ -136,7 +134,7 @@ namespace MEF3D
                 nneu = Convert.ToInt32(result[3]);
                 
                 m.setParameters(k, Q);
-                m.setSizes(nnodes, neltos, ndirich, nneu);
+                m.setSizes(nnodes * 3, neltos, ndirich, nneu);
                 m.createData();
 
                 obtenerDatos(sr, (int)Classes.line.SINGLELINE, nnodes, (int)Classes.mode.INT_FLOAT_FLOAT_FLOAT, m.getNodes());

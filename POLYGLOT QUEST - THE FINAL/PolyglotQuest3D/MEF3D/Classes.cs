@@ -12,6 +12,8 @@ namespace MEF3D
     {
         public enum indicator { NOTHING };
         public enum line { NOLINE, SINGLELINE, DOUBLELINE };
+
+        //TODO: MODIFIED MODE ENUM TO SAVE MORE MODES
         public enum mode { NOMODE, INT_FLOAT, INT_FLOAT_FLOAT_FLOAT, INT_INT_INT_INT_INT };
         public enum parameter { THERMAL_CONDUCTIVITY, HEAT_SOURCE };
         public enum size { NODES, ELEMENTS, DIRICHLET, NEUMANN };

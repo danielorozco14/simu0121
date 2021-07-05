@@ -9,7 +9,8 @@ namespace MEF3D.Helpers
     public class Node:Item
     {
        
-            public override void setValues(int a, float b, float c, float d, int e, int f, int g, int h, float i)
+            public override void setValues(int a, float b, float c, float d, int e, int f, int g, int h,
+                int j, int k, int l, int m, int n, int o, float i)
             {
                 id = a;
                 x = b;
