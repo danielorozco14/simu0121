@@ -171,11 +171,16 @@ namespace MEF3D
             Console.WriteLine("Iniciando calculo de inversa...");
             Matrix Cof = new Matrix();
             Matrix Adj = new Matrix();
-            Console.WriteLine("Calclo de determinante...");
+            Console.WriteLine("Calculo de determinante...");
             float det = determinant(M);
             if (det == 0)
-                Environment.Exit(1);
-            
+            {
+                Console.WriteLine("DETERMINANTE 0, SE SALE DE LA EJECUCION");
+                Console.ReadKey();
+                System.Environment.Exit(1);
+                
+            }
+
             Console.WriteLine("Iniciando calculo de cofactores...");
             cofactors(M, Cof);
             

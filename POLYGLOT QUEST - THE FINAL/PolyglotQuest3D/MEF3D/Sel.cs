@@ -254,9 +254,6 @@ namespace MEF3D
             localK[29][28] = (EI * Jacobian) * J;
             localK[29][29] = (EI * Jacobian) * C;
 
-
-            showMatrix(localK);
-            Console.ReadKey();
             return localK;
         }
 
@@ -290,10 +287,10 @@ namespace MEF3D
             Node n2 = m.getNode(el.node2 - 1);
             Node n8 = m.getNode(el.node8 - 1);
 
-            if (n1.x == n2.x)
+            if (n1.x == n2.x || (4 * n1.x + 4 * n2.x - (8 * n8.x)) == 0)
                 return (float)Math.Pow(10, -6);
 
-            result = (float)(1 /((n2.x - n1.x))) * (4 * n1.x + 4 * n2.x - 8 * n8.x);
+            result = (float)((1 / ( (n2.x - n1.x)))) * (4 * n1.x + 4 * n2.x - ( 8 * n8.x));
 
             return result;
 
@@ -486,37 +483,6 @@ namespace MEF3D
             int index9 = e.node9 - 1;
             int index10 = e.node10 - 1;
 
-            //List<int> indexes = new List<int>();
-            //indexes.Add(index1); //0
-            //indexes.Add(index2);
-            //indexes.Add(index3);
-            //indexes.Add(index4);
-            //indexes.Add(index5);
-            //indexes.Add(index6);
-            //indexes.Add(index7);
-            //indexes.Add(index8);
-            //indexes.Add(index9);
-            //indexes.Add(index10);//9
-
-            ////SI TRUENA ES POR LOS INDICES
-            //for (int i = 10, j =0; i < 20; i++, j++)
-            //{
-            //    indexes.Add(10 + indexes[j]);
-            //}
-            //for (int i = 20, j=0; i < 30; i++, j++)
-            //{
-            //    indexes.Add(20 + indexes[j]);
-            //}
-
-
-            //for(int i = 0; i < 30; i++)
-            //{
-            //    for(int j = 0; j < 30; j++)
-            //    {
-            //        K[indexes[i]][indexes[j]] += localK[i][j];
-            //    }
-            //}
-
             int[] indexs = new int[30];
             indexs[0] = index1;
             indexs[1] = index2;
@@ -550,18 +516,6 @@ namespace MEF3D
             indexs[29] = index10+20;
 
 
-            //for (int i = 10; i < 20; i++)
-            //{
-            //    indexs[i] = indexs[i - 10] + nnodes;
-            //}
-            //for (int i = 20; i < 30; i++)
-            //{
-            //    indexs[i] = indexs[i - 20] + 2 * nnodes;
-            //}
-
-            foreach(int i in indexs)
-                Console.WriteLine(i);
-
             for (int i = 0; i < 30; i++)
             {
                 for (int j = 0; j < 30; j++)
@@ -581,9 +535,8 @@ namespace MEF3D
         public void assemblyb(Element e, Vector localb, Vector b)
         {
 
-            //MOCHADO
-        
             int nodos = 10;
+
             int index1 = e.node1 - 1;
             int index2 = e.node2 - 1;
             int index3 = e.node3 - 1;

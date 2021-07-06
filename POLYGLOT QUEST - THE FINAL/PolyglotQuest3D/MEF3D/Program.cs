@@ -13,7 +13,7 @@ namespace MEF3D
     {
         static void Main(string[] args)
         {
-            string filename = "Lapequenia.dat";
+            string filename = args[0];
 
             List<Matrix> localKs = new List<Matrix>();
             List<Vector> localbs = new List<Vector>();
@@ -32,7 +32,7 @@ namespace MEF3D
 
             Mesh  m = new Mesh();
 
-            Tools.leerMallayCondiciones(m, filename);
+            Tools.leerMallayCondiciones(m, filename + ".dat");
             Console.WriteLine("Datos obtenidos correctamente");
 
             sel.crearSistemasLocales(m, localKs, localbs);
