@@ -174,8 +174,7 @@ def createLocalb(element, mesh):
     return b
 
 
-# SI PETA, ES PORQUE MESH NO DEBERIA SER CREADO EN LA FUNCION
-# SINO PASADO COMO ARGUMENTO
+
 def crearSistemasLocales(mesh, localKs, localBs):
     
     for i in range(0, mesh.getSize(1)):
